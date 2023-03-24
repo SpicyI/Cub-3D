@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/24 01:00:02 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/24 21:27:10 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void putPlayer(t_mlx *mlx)
     
     // Draw the player
     mlx_put_image_to_window(mlx->p_mlx, mlx->win2d, mlx->img, 0, 0);
-    // mlx_destroy_image(mlx->p_mlx, mlx->img);
+    mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->img, 0, 0);
+    mlx_destroy_image(mlx->p_mlx, mlx->img);
 }
 
 void drawMap(t_mlx *mlx)
@@ -93,9 +94,47 @@ void drawMap(t_mlx *mlx)
         y++;
     }
     mlx_put_image_to_window(mlx->p_mlx, mlx->win2d, mlx->img, 0, 0);
+    mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->img, 0, 0);
     //  save the image
     mlx->_m.mapImg = mlx->img;
     mlx->_m.mapImgAddr = mlx->addr;
 }
 
+void putDirection(t_mlx *mlx)
+{
+    int x = 0;
+    int y = 0;
+
+    
+    mlx->img = mlx_new_image(mlx->p_mlx, screenWidth, screenHeight);
+    mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bits_per_pixel, &mlx->line_length,
+                                  &mlx->endian);
+    
+    // draw the transparent background
+    while (x < screenWidth)
+    {
+        y = 0;
+        while (y < screenHeight)
+        {
+            my_mlx_pixel_put(mlx, x, y, 0xFF000000);
+            y++;
+        }
+        x++;
+    }
+    x = mlx->_p.playerX;
+    y = mlx->_p.playerY;
+    int line_length = MIN(screenWidth / mlx->_m.mapWidth, screenHeight / mlx->_m.mapHeight);
+    int i = 0;
+    // Draw the line
+    while(i < line_length)
+    {
+        x = (cos(mlx->_p.playerAngle) * i) + mlx->_p.playerX;
+        y = (sin(mlx->_p.playerAngle) * i) + mlx->_p.playerY;
+        my_mlx_pixel_put(mlx, x, y, 0x00FF0000);
+        i++;
+    }
+    mlx_put_image_to_window(mlx->p_mlx, mlx->win2d, mlx->img, 0, 0);
+    mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->img, 0, 0);
+    // mlx_destroy_image(mlx->p_mlx, mlx->img);
+}
 

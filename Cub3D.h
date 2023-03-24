@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/23 23:55:07 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/24 20:11:36 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #define mapHeightd 24
 #define screenWidth 720
 #define screenHeight 720
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct s_map
 {
@@ -64,5 +65,6 @@ int	plane_controls(int key, t_mlx *mlx);
 /*                2drendring           */
 int render(t_mlx * mlx);
 void putPlayer(t_mlx* mlx);
+void putDirection(t_mlx *mlx);
 void drawMap(t_mlx *mlx);
 #endif

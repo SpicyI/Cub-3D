@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/24 01:23:52 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/24 21:26:23 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int main()
     
     init_data(&mlx);
     mlx.p_mlx = mlx_init();
-    // mlx.win = mlx_new_window(mlx.p_mlx, screenWidth, screenHeight, "Cub3D");
+    mlx.win = mlx_new_window(mlx.p_mlx, screenWidth, screenHeight, "Cub3D");
     mlx.win2d = mlx_new_window(mlx.p_mlx, screenWidth, screenHeight, "Cub2D");
 
     drawMap(&mlx);
