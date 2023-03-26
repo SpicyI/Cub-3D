@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/26 02:23:06 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/26 03:53:46 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,28 +192,27 @@ void putWalls(t_mlx * mlx)
 {
     int x = 0;
     int y = 0;
-    float wallHeight;
+    int i = 0;
+    int wallHeight;
     t_mlx tmp;
-
+    
     tmp.img = mlx_new_image(mlx->p_mlx, screenWidth, screenHeight);
     tmp.addr = mlx_get_data_addr(tmp.img, &tmp.bits_per_pixel, &tmp.line_length,
                                   &mlx->endian);
     while (x < screenWidth)
     {
-        wallHeight = WALL_HIGHT(mlx->distances[x], 30);
+
+        wallHeight = ((screenWidth / mlx->_m.mapWidth) / mlx->distances[x]) * SCREEN_DIST;
+        printf("wall height is at [%d] = %d \n" ,x,wallHeight);
         if (wallHeight >= screenHeight)
-            wallHeight = screenHeight - 1;
-        y = (screenHeight / 2) - (wallHeight / 2);
-        while (y < wallHeight)
+            wallHeight = screenHeight;
+        i = 0;
+        y = (screenHeight / 2) - ((int)wallHeight / 2);
+        printf("-> %d\n", y);
+        while (i < wallHeight)
         {
-            
-            if (y < 0 || y > screenHeight)
-            {
-                printf("y is out of screen %d \n", y);
-                break;
-            }
-            my_mlx_pixel_put(&tmp, x, y, 0x000000FF);
-            y++;
+            my_mlx_pixel_put(&tmp, x, y + i, 0x000000FF);
+            i++;
         }
         x++;
     }
