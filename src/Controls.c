@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/25 21:19:18 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/26 22:46:48 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,18 @@ int	plane_controls(int key, t_mlx *mlx)
         mlx->_p.playerAngle -= mlx->_p.rotationSpeed;
     if (key == 124)
         mlx->_p.playerAngle += mlx->_p.rotationSpeed;
-    if (key == 125 /*&& !isWall(key,mlx)*/)
+    if (key == 125)
     {
-        if (mlx->_m.map[(int)mlx->_p.playerY / 30 ][(int)(mlx->_p.playerX - stepX) / 30] != '1')
+        if (mlx->_m.map[(int)mlx->_p.playerY / mlx->_m.mapScale ][(int)(mlx->_p.playerX - stepX) / mlx->_m.mapScale] != '1')
             mlx->_p.playerX -= stepX;
-        if (mlx->_m.map[(int)(mlx->_p.playerY - stepY) / 30 ][(int)mlx->_p.playerX /30] != '1')
+        if (mlx->_m.map[(int)(mlx->_p.playerY - stepY) / mlx->_m.mapScale ][(int)mlx->_p.playerX / mlx->_m.mapScale] != '1')
             mlx->_p.playerY -= stepY;
     }
-    if (key == 126 /*&& !isWall(key,mlx)*/)
+    if (key == 126)
     {  
-        if (mlx->_m.map[(int)mlx->_p.playerY / 30][(int)(mlx->_p.playerX + stepX) / 30] != '1')
+        if (mlx->_m.map[(int)mlx->_p.playerY / mlx->_m.mapScale][(int)(mlx->_p.playerX + stepX) / mlx->_m.mapScale] != '1')
             mlx->_p.playerX += stepX;
-        if (mlx->_m.map[(int)(mlx->_p.playerY + stepY) / 30][(int)mlx->_p.playerX / 30] != '1')
+        if (mlx->_m.map[(int)(mlx->_p.playerY + stepY) / mlx->_m.mapScale][(int)mlx->_p.playerX / mlx->_m.mapScale] != '1')
             mlx->_p.playerY += stepY;
     }
 	return (0);

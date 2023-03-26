@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/26 02:06:42 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/26 20:59:36 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
 
 void	exit_game(t_mlx *mlx)
 {
-	// mlx_destroy_window(mlx->p_mlx, mlx->win);
+	mlx_destroy_window(mlx->p_mlx, mlx->win);
 	mlx_destroy_window(mlx->p_mlx, mlx->win2d);
+	free(mlx->_m.map);
 	exit(0);
 }
 

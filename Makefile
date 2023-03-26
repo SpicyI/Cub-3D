@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS =  -Wall -Werror -Wextra -fsanitize=address -g
+CFLAGS =  -Wall -Werror -Wextra
 MLX_FLAGS= -lmlx -framework OpenGL -framework AppKit
 
 NAME = Cub3D
@@ -9,7 +9,7 @@ HEADERS = $(wildcard ../*.h);
 OBJDIR = obj
 OBJ_DIR= mkdir -p obj
 
-SRC = $(wildcard $(SRCDIR)/*$(EXT))
+SRC = $(wildcard $(SRCDIR)/*$(EXT)) $(wildcard $(SRCDIR)/tools/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 
 RM = rm -rf
