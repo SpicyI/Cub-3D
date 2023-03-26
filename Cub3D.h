@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/24 20:11:36 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/26 02:13:10 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,20 @@
 #define mapHeightd 24
 #define screenWidth 720
 #define screenHeight 720
+#define FOV 60 * (PI / 180)
+#define SCREEN_DIST (screenWidth / 2) / tan(FOV / 2)
+#define WALL_HIGHT(dist , scale)  (scale /  dist) * SCREEN_DIST
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+
+typedef struct s_ray
+{
+    int rayNumber;
+    float step;
+    float startAngle;
+    float endAngle;
+    int hitpoints;
+
+}               t_ray;
 
 typedef struct s_map
 {
@@ -54,6 +67,7 @@ typedef struct s_mlx
     int     endian;
     t_map   _m;
     t_player _p;
+    float  *distances;
 }               t_mlx;
 
 /*                  mlxtools         */
@@ -67,4 +81,7 @@ int render(t_mlx * mlx);
 void putPlayer(t_mlx* mlx);
 void putDirection(t_mlx *mlx);
 void drawMap(t_mlx *mlx);
+void transparent_Bg(t_mlx *mlx);
+void rayCaster(t_mlx * mlx);
+void putWalls(t_mlx * mlx);
 #endif
