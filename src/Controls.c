@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/26 22:46:48 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:36:55 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,16 @@
 int	plane_controls(int key, t_mlx *mlx)
 {
     float stepX , stepY;
-
     stepX = cos(mlx->_p.playerAngle) * mlx->_p.movmentSpeed;
     stepY = sin(mlx->_p.playerAngle) * mlx->_p.movmentSpeed;
     
     if (!mlx->img)
         return (0);
+    printf("key = %d\n", key);
     if (key == 53)
 		exit(0);
+    if (key == 48)
+        mlx->_m.displayMap *= -1;
     if (key == 123)
         mlx->_p.playerAngle -= mlx->_p.rotationSpeed;
     if (key == 124)
