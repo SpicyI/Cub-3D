@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/27 20:09:08 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:48:34 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@
 // constants
 # define PI 3.1415926535
 # define FOV 60 * (PI / 180)
-# define screenWidth 1280
+# define screenWidth 720
 # define screenHeight 720
 # define RAYNUMBER screenWidth
 # define mapWidthd 25
 # define mapHeightd 24
 
 // Calculations marcos
-# define SCREEN_DIST (screenWidth / 2) / tan(FOV / 2)
+# define SCREEN_DIST ((screenWidth / 2) / tan(FOV / 2))
 # define WALL_HIGHT(dist, scale) (scale / dist) * SCREEN_DIST
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -50,10 +50,10 @@
 # define RESET "\x1B[0m"
 
 // mlx colors
-# define WALLCOLOR 0x20FF90FF
-# define FLOORCOLOR 0x00AED5FF
+# define WALLCOLOR 0xFFFF90FF
+# define FLOORCOLOR 0x80FFFFFF
 # define TRANSPARENT 0xFF000000
-# define ARROWCOLOR 0x40FFFF00
+# define ARROWCOLOR 0x60FFFF00
 # define RAYCOLOR 0xC0022C36
 # define SKYCOLOR 0x0089CFF0
 # define GROUNDCOLOR 0x009A7B4F
@@ -94,6 +94,8 @@ typedef struct s_map
 	int				mapHeight;
 	int				mapScale;
 	int 			displayMap;
+	int 			imgPutYpos;
+	int 			imgPutXpos;
 }					t_map;
 
 //player data
@@ -106,6 +108,7 @@ typedef struct s_player
 	float			playerAngle;
 
 	void            *playerImg;
+	void            *iconImg;
 }					t_player;
 
 //genaral data
@@ -159,11 +162,12 @@ int					render(t_mlx *mlx);
 int					plane_controls(int key, t_mlx *mlx);
 
 /*                2d rendring           */
-void				transparent_Bg(t_mlx *mlx);
+void	transparent_Bg(t_mlx *mlx, int img_width, int img_height);
 void				drawMap(t_mlx *mlx);
 void				putPlayer(t_mlx *mlx);
 void				putDirection(t_mlx *mlx);
 void				rayCaster(t_mlx *mlx);
+void minimap(t_mlx *mlx);
 
 /*             3d rendring*/
 void				putWalls(t_mlx *mlx);

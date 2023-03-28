@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/27 03:36:55 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:44:19 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,24 @@ int	plane_controls(int key, t_mlx *mlx)
     
     if (!mlx->img)
         return (0);
-    printf("key = %d\n", key);
     if (key == 53)
 		exit(0);
     if (key == 48)
+    {
         mlx->_m.displayMap *= -1;
+        if (mlx->_m.displayMap  < 0)
+        {
+            // put map in middle of the screen
+            mlx->_m.imgPutXpos = (screenWidth / 2) - (mlx->_m.mapWidth * mlx->_m.mapScale / 2);
+            mlx->_m.imgPutYpos = (screenHeight / 2) - (mlx->_m.mapHeight * mlx->_m.mapScale / 2);
+        }
+        else if (mlx->_m.displayMap > 0)
+        {
+            // put map in top left corner
+            mlx->_m.imgPutXpos = 100 - mlx->_p.playerX;
+            mlx->_m.imgPutYpos = 100 - mlx->_p.playerY;
+        }
+    }
     if (key == 123)
         mlx->_p.playerAngle -= mlx->_p.rotationSpeed;
     if (key == 124)
