@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/28 04:43:19 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/29 02:40:26 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	exit_game(t_mlx *mlx)
 
 int	render(t_mlx *mlx)
 {
+	if (!mlx->inChange)
+		return 1;
 	mlx_clear_window(mlx->p_mlx, mlx->win);
 	drawMap(mlx);
 	mlx->img = mlx_new_image(mlx->p_mlx, mlx->_m.mapWidth * mlx->_m.mapScale,
@@ -61,5 +63,6 @@ int	render(t_mlx *mlx)
 	// else
 	// 	minimap(mlx);
 	mlx_destroy_image(mlx->p_mlx, mlx->_p.playerImg);
+	mlx->inChange = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/28 04:48:34 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/29 03:36:39 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 // constants
 # define PI 3.1415926535
 # define FOV 60 * (PI / 180)
-# define screenWidth 720
+# define screenWidth 1280
 # define screenHeight 720
 # define RAYNUMBER screenWidth
 # define mapWidthd 25
@@ -58,6 +58,16 @@
 # define SKYCOLOR 0x0089CFF0
 # define GROUNDCOLOR 0x009A7B4F
 # define WHITE 0x00FFFFFF
+# define METAL 0x00a1a4a3
+// logic
+# define TRUE 1
+# define FALSE 0
+# define ON 1
+# define OFF 0
+# define X 0
+# define Y 1
+# define VERTICAL 0
+# define HORIZONTAL 1
 // texture data
 typedef struct t_elements
 {
@@ -82,6 +92,8 @@ typedef struct s_ray
 	float			step;
 	float			startAngle;
 	float			endAngle;
+	float			hitPoint[2];
+	int             hitSide; // 0 = vertical, 1 = horizontal
 }					t_ray;
 
 // map data
@@ -126,6 +138,8 @@ typedef struct s_mlx
 	t_player		_p;
 	t_elements		_e;
 	float			*distances;
+	int				*rayColor;
+	int 			inChange;
 }					t_mlx;
 
 /*           parcing        */
@@ -172,4 +186,5 @@ void minimap(t_mlx *mlx);
 /*             3d rendring*/
 void				putWalls(t_mlx *mlx);
 void	            put_landscape(t_mlx *mlx);
+int	shader(int color, int shad_percentage);
 #endif
