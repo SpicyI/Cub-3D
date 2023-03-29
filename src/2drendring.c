@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/29 04:08:47 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/29 20:23:02 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ void	putPlayer(t_mlx *mlx)
 	// Draw the player
 	if (mlx->_m.displayMap < 0)
 	{
-		x = (screenWidth / 2) - (mlx->_m.mapWidth * mlx->_m.mapScale / 2) + mlx->_p.playerX  - player_thickness / 2;
-		y = (screenHeight / 2) - (mlx->_m.mapHeight * mlx->_m.mapScale / 2) + mlx->_p.playerY - player_thickness / 2;
+		x = (screenWidth / 2) - (mlx->_m.mapWidth * mlx->_m.mapScale / 2)
+			+ mlx->_p.playerX - player_thickness / 2;
+		y = (screenHeight / 2) - (mlx->_m.mapHeight * mlx->_m.mapScale / 2)
+			+ mlx->_p.playerY - player_thickness / 2;
 	}
 	else
 	{
@@ -65,18 +67,26 @@ void	drawMap(t_mlx *mlx)
 					if (mlx->_m.map[y][x] != '1')
 					{
 						// add edges to map
-						if ((i + 1 == (y + 1) * mlx->_m.mapScale && (y + 1 < mlx->_m.mapHeight && mlx->_m.map[y + 1][x] == '1')) ||
-							(j + 1 == (x + 1) * mlx->_m.mapScale && (x + 1 < mlx->_m.mapWidth && mlx->_m.map[y][x + 1] == '1')))
+						if ((i + 1 == (y + 1) * mlx->_m.mapScale && (y
+									+ 1 < mlx->_m.mapHeight && mlx->_m.map[y
+									+ 1][x] == '1')) ||
+							(j + 1 == (x + 1) * mlx->_m.mapScale && (x
+										+ 1 < mlx->_m.mapWidth
+										&& mlx->_m.map[y][x + 1] == '1')))
 							my_mlx_pixel_put(mlx, j, i, WHITE);
 						else
-						my_mlx_pixel_put(mlx, j, i, FLOORCOLOR);
+							my_mlx_pixel_put(mlx, j, i, FLOORCOLOR);
 					}
 					// draw the floor
 					else
 					{
 						// add edges to map
-						if ((i + 1 == (y + 1) * mlx->_m.mapScale && (y + 1 < mlx->_m.mapHeight && mlx->_m.map[y + 1][x] != '1')) ||
-							(j + 1 == (x + 1) * mlx->_m.mapScale && (x + 1 < mlx->_m.mapWidth && mlx->_m.map[y][x + 1] != '1')))
+						if ((i + 1 == (y + 1) * mlx->_m.mapScale && (y
+									+ 1 < mlx->_m.mapHeight && mlx->_m.map[y
+									+ 1][x] != '1')) ||
+							(j + 1 == (x + 1) * mlx->_m.mapScale && (x
+										+ 1 < mlx->_m.mapWidth
+										&& mlx->_m.map[y][x + 1] != '1')))
 							my_mlx_pixel_put(mlx, j, i, WHITE);
 						else
 							my_mlx_pixel_put(mlx, j, i, WALLCOLOR);
@@ -124,37 +134,44 @@ void	drawMap(t_mlx *mlx)
 	mlx->_m.mapImgAddr = mlx->addr;
 }
 
-
 float	cast(t_ray *ray, t_mlx *mlx)
 {
 	int		x;
 	int		y;
 	int		i;
 	float	distanceToWall;
-	float rayAngle = ray->startAngle;
+	float	rayAngle;
 
+	rayAngle = ray->startAngle;
 	i = 0;
-	x = floor((cos(rayAngle) * i) + mlx->_p.playerX);
-	y = floor((sin(rayAngle) * i) + mlx->_p.playerY);
+	x = floor((cos(rayAngle) * i) + ((mlx->_p.playerX / mlx->_m.mapScale)
+				* ray->ScaleFactor));
+	y = floor((sin(rayAngle) * i) + ((mlx->_p.playerY / mlx->_m.mapScale)
+				* ray->ScaleFactor));
 	// cast the ray
 	while (1)
 	{
 		if (mlx->_m.displayMap > 0)
 		{
-			if (x < mlx->_p.playerX + 100 && y < mlx->_p.playerY + 100)
-				my_mlx_pixel_put(mlx, x, y, RAYCOLOR);
+			if ((x / ray->ScaleFactor) * mlx->_m.mapScale < mlx->_p.playerX
+				+ 100 && (y / ray->ScaleFactor)
+				* mlx->_m.mapScale < mlx->_p.playerY + 100)
+				my_mlx_pixel_put(mlx, (x / ray->ScaleFactor) * mlx->_m.mapScale,
+						(y / ray->ScaleFactor) * mlx->_m.mapScale, RAYCOLOR);
 		}
 		else
-			my_mlx_pixel_put(mlx, x, y, RAYCOLOR);
-		x = floor((cos(rayAngle) * i) + mlx->_p.playerX);
-		if (mlx->_m.map[y / mlx->_m.mapScale][x / mlx->_m.mapScale] == '1')
+			my_mlx_pixel_put(mlx, (x / ray->ScaleFactor) * mlx->_m.mapScale, (y / ray->ScaleFactor) * mlx->_m.mapScale, RAYCOLOR);
+		x = floor(cos(rayAngle) * i) + (((mlx->_p.playerX / mlx->_m.mapScale)
+					* ray->ScaleFactor));
+		if (mlx->_m.map[y / SCALEFACTOR][x / SCALEFACTOR] == '1')
 		{
 			// y = floor((sin(rayAngle) * i) + mlx->_p.playerY);
 			ray->hitSide = VERTICAL;
 			break ;
 		}
-		y = floor((sin(rayAngle) * i) + mlx->_p.playerY);
-		if (mlx->_m.map[y / mlx->_m.mapScale][x / mlx->_m.mapScale] == '1')
+		y = floor((sin(rayAngle) * i) + ((mlx->_p.playerY / mlx->_m.mapScale)
+					* ray->ScaleFactor));
+		if (mlx->_m.map[y / SCALEFACTOR][x / SCALEFACTOR] == '1')
 		{
 			ray->hitSide = HORIZONTAL;
 			break ;
@@ -162,26 +179,30 @@ float	cast(t_ray *ray, t_mlx *mlx)
 		i++;
 	}
 	// save the hit point
-	ray->hitPoint[X] = x;
-	ray->hitPoint[Y] = y;
+	ray->hitPoint[X] = (x / ray->ScaleFactor) * mlx->_m.mapScale;
+	ray->hitPoint[Y] = (y / ray->ScaleFactor) * mlx->_m.mapScale;
 	// calculate the distance and return it
-	distanceToWall = sqrt(pow(x - mlx->_p.playerX, 2) + pow(y - mlx->_p.playerY,
-				2));
+	distanceToWall = sqrt(pow(x - ((mlx->_p.playerX / mlx->_m.mapScale)
+					* ray->ScaleFactor), 2) + pow(y - ((mlx->_p.playerY
+						/ mlx->_m.mapScale) * ray->ScaleFactor), 2));
 	// correct the distance
 	distanceToWall *= cos(mlx->_p.playerAngle - rayAngle);
 	return (distanceToWall);
 }
-void	initRay(t_ray *ray,  t_mlx *mlx)
+void	initRay(t_ray *ray, t_mlx *mlx)
 {
 	ray->startAngle = mlx->_p.playerAngle - (FOV / 2);
 	ray->endAngle = mlx->_p.playerAngle + (FOV / 2);
 	ray->rayNumber = RAYNUMBER;
+	ray->ScaleFactor = SCALEFACTOR;
 	ray->step = FOV / ray->rayNumber;
 }
 
-int getColor(t_ray *ray , t_mlx *mlx)
+int	getColor(t_ray *ray, t_mlx *mlx)
 {
-	int color = 0;
+	int	color;
+
+	color = 0;
 	if (ray->hitPoint[Y] - mlx->_p.playerY < 0 && ray->hitSide == HORIZONTAL)
 		color = 0x00555652; // green for north
 	if (ray->hitPoint[Y] - mlx->_p.playerY >= 0 && ray->hitSide == HORIZONTAL)
@@ -191,7 +212,6 @@ int getColor(t_ray *ray , t_mlx *mlx)
 	if (ray->hitPoint[X] - mlx->_p.playerX >= 0 && ray->hitSide == VERTICAL)
 		color = shader(0x00505652, 40); // yellow for west
 	return (color);
-	
 }
 
 void	rayCaster(t_mlx *mlx)
@@ -199,7 +219,7 @@ void	rayCaster(t_mlx *mlx)
 	t_ray	ray;
 	int		i;
 
-	initRay(&ray ,mlx);
+	initRay(&ray, mlx);
 	i = 0;
 	while (i < ray.rayNumber)
 	{
@@ -209,7 +229,6 @@ void	rayCaster(t_mlx *mlx)
 		i++;
 	}
 }
-
 
 void	transparent_Bg(t_mlx *mlx, int img_width, int img_height)
 {
@@ -230,15 +249,16 @@ void	transparent_Bg(t_mlx *mlx, int img_width, int img_height)
 	}
 }
 
-// This function calculates the final color of a pixel based on the color of the pixel itself and the percentage of transparency of the pixel. 
-// The function takes in the color of the pixel and the percentage of transparency of the pixel. 
+// This function calculates the final color of a pixel based on the color of the pixel itself and the percentage of transparency of the pixel.
+// The function takes in the color of the pixel and the percentage of transparency of the pixel.
 
-int shader(int color, int shad_percentage)
+int	shader(int color, int shad_percentage)
 {
 	unsigned char	full_transparency;
 	unsigned char	red;
 	unsigned char	green;
 	unsigned char	blue;
+
 	full_transparency = 255;
 	red = (color >> 16) & 0xFF;
 	green = (color >> 8) & 0xFF;
@@ -248,7 +268,6 @@ int shader(int color, int shad_percentage)
 	full_transparency -= full_transparency * shad_percentage / 100;
 	return (full_transparency << 24 | red << 16 | green << 8 | blue);
 }
-
 
 void	putWalls(t_mlx *mlx)
 {
@@ -268,7 +287,7 @@ void	putWalls(t_mlx *mlx)
 	while (x < screenWidth)
 	{
 		// calculate the wall height
-		wallHeight = (mlx->_m.mapScale / mlx->distances[x]) * SCREEN_DIST;
+		wallHeight = (SCALEFACTOR / mlx->distances[x]) * SCREEN_DIST;
 		if (wallHeight >= screenHeight)
 			wallHeight = screenHeight;
 		i = 0;
@@ -283,7 +302,7 @@ void	putWalls(t_mlx *mlx)
 		}
 		// draw the floor
 		i += wallHeight;
-		while (i < screenHeight)  
+		while (i < screenHeight)
 		{
 			my_mlx_pixel_put(&tmp, x, i, shader(GROUNDCOLOR, (i - (screenHeight
 								/ 2)) * 100 / (screenHeight / 2)));

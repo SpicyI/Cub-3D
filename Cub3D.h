@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/29 03:36:39 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/29 20:27:11 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # define RAYNUMBER screenWidth
 # define mapWidthd 25
 # define mapHeightd 24
+# define SCALEFACTOR 100
 
 // Calculations marcos
 # define SCREEN_DIST ((screenWidth / 2) / tan(FOV / 2))
@@ -93,6 +94,7 @@ typedef struct s_ray
 	float			startAngle;
 	float			endAngle;
 	float			hitPoint[2];
+	float				ScaleFactor;
 	int             hitSide; // 0 = vertical, 1 = horizontal
 }					t_ray;
 
