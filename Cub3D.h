@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/29 20:27:11 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/30 03:58:31 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,10 @@
 
 // constants
 # define PI 3.1415926535
-# define FOV 60 * (PI / 180)
-# define screenWidth 1280
-# define screenHeight 720
-# define RAYNUMBER screenWidth
-# define mapWidthd 25
-# define mapHeightd 24
+# define SCREEN_WIDTH 1280
+# define SCREEN_HEIGHT 720
+# define RAYNUMBER SCREEN_WIDTH * 0.4
 # define SCALEFACTOR 100
-
-// Calculations marcos
-# define SCREEN_DIST ((screenWidth / 2) / tan(FOV / 2))
-# define WALL_HIGHT(dist, scale) (scale / dist) * SCREEN_DIST
-# define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 // print colors
 # define RED "\x1B[31m"
@@ -69,7 +61,31 @@
 # define Y 1
 # define VERTICAL 0
 # define HORIZONTAL 1
+# define PRESSED 1
+# define RELEASED 0
+# define MOVING 1
+# define STANDING 0
 // texture data
+
+enum				e_keys
+{
+	UP_ARROW,
+	DOWN_ARROW,
+	LEFT_ARROW,
+	RIGHT_ARROW,
+	W_KEY,
+	A_KEY,
+	S_KEY,
+	D_KEY
+};
+
+typedef struct s_bloc
+{
+	int 			x;
+	int 			y;
+	int 			bloc_x;
+	int 			bloc_y;
+}					t_bloc;
 typedef struct t_elements
 {
 	char			*n_texture;
@@ -89,40 +105,42 @@ typedef struct t_components
 // ray tools
 typedef struct s_ray
 {
-	int				rayNumber;
+	int				rays_number;
 	float			step;
-	float			startAngle;
-	float			endAngle;
-	float			hitPoint[2];
-	float				ScaleFactor;
-	int             hitSide; // 0 = vertical, 1 = horizontal
+	float			ray_angle;
+	float			max_angle;
+	float			hit_point[2];
+	float			scale_factor;
+	int				hit_side;
+	float 			x;
+	float 			y;
 }					t_ray;
 
 // map data
 typedef struct s_map
 {
 	char			**map;
-	void			*mapImg;
-	void			*mapImgAddr;
-	int				mapWidth;
-	int				mapHeight;
-	int				mapScale;
-	int 			displayMap;
-	int 			imgPutYpos;
-	int 			imgPutXpos;
+	void			*map_img;
+	void			*mapimg_addr;
+	int				map_width;
+	int				map_height;
+	int				map_scale;
+	int				display_map;
+	int				img_ypos;
+	int				img_xpos;
 }					t_map;
 
 //player data
 typedef struct s_player
 {
-	float			playerX;
-	float			playerY;
-	float			movmentSpeed;
-	float			rotationSpeed;
-	float			playerAngle;
+	float			player_x;
+	float			player_y;
+	float			pmovment_speed;
+	float			rotation_speed;
+	float			player_angle;
 
-	void            *playerImg;
-	void            *iconImg;
+	void			*player_img;
+	void			*icon_img;
 }					t_player;
 
 //genaral data
@@ -130,7 +148,6 @@ typedef struct s_mlx
 {
 	void			*p_mlx;
 	void			*win;
-	void			*win2d;
 	void			*img;
 	char			*addr;
 	int				bits_per_pixel;
@@ -140,8 +157,11 @@ typedef struct s_mlx
 	t_player		_p;
 	t_elements		_e;
 	float			*distances;
-	int				*rayColor;
-	int 			inChange;
+	int				*ray_color;
+	int				on_change;
+	int				control_keys[8];
+	float			fov;
+	float			sreen_dist;
 }					t_mlx;
 
 /*           parcing        */
@@ -175,18 +195,21 @@ void				my_mlx_pixel_put(t_mlx *data, int x, int y, int color);
 int					render(t_mlx *mlx);
 
 /*                control           */
-int					plane_controls(int key, t_mlx *mlx);
+int					keys_pressed(int key, t_mlx *mlx);
+void				update(t_mlx *mlx);
 
 /*                2d rendring           */
-void	transparent_Bg(t_mlx *mlx, int img_width, int img_height);
+void				transparent_Bg(t_mlx *mlx, int img_width, int img_height);
 void				drawMap(t_mlx *mlx);
 void				putPlayer(t_mlx *mlx);
-void				putDirection(t_mlx *mlx);
 void				rayCaster(t_mlx *mlx);
-void minimap(t_mlx *mlx);
+void				update_minimap(t_mlx *mlx);
 
 /*             3d rendring*/
 void				putWalls(t_mlx *mlx);
-void	            put_landscape(t_mlx *mlx);
-int	shader(int color, int shad_percentage);
+int					shader(int color, int shad_percentage);
+int					plane_controls2(int key, t_mlx *mlx);
+
+/*                tools   */
+int					min(int a, int b);
 #endif
