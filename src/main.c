@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 04:43:39 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/30 05:48:14 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ void	init_data(t_mlx *mlx, t_components *comp)
 	mlx->_p.player_y = (11 * mlx->_m.map_scale);
 	mlx->_p.player_angle = M_PI / 2;
 	mlx->_p.pmovment_speed = 6;
-	mlx->_p.rotation_speed = 4 * (M_PI / 180);
+	mlx->_p.rotation_speed = 6 * (M_PI / 180);
 	mlx->_m.display_map = 1;
 	mlx->_m.img_xpos = 100 - mlx->_p.player_x;
 	mlx->_m.img_ypos = 100 - mlx->_p.player_y;
 	mlx->on_change = 0;
 	mlx->fov = 60 * (M_PI / 180);
 	mlx->sreen_dist = (SCREEN_WIDTH / 2) / tan(mlx->fov / 2);
+	mlx->mouse = 0;
 }
 
 void	put_intro(t_mlx *mlx)
@@ -55,6 +56,23 @@ void	put_intro(t_mlx *mlx)
 	mlx_destroy_image(mlx->p_mlx, mlx->img);
 	mlx->_p.icon_img = mlx_xpm_file_to_image(mlx->p_mlx, "./src/player.xpm", &i,
 			&j);
+}
+
+int mouse_controls(int x, int y, t_mlx *mlx)
+{
+	mlx->on_change = 1;
+	if (x - SCREEN_WIDTH / 2 > 100)
+		mlx->mouse = 1;
+	else if (x - SCREEN_WIDTH / 2 <  -100)
+		mlx->mouse = -1;
+	printf(" x: %d, y: %d\n", x, y);
+	return (0);
+}
+int mouse_controls2(int button, int x, int y, t_mlx *mlx)
+{
+	mlx->on_change = 1;
+	printf("button: %d x: %d, y: %d\n", button,x, y);
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -74,5 +92,8 @@ int	main(int argc, char **argv)
 	mlx_loop_hook(mlx.p_mlx, &render, &mlx);
 	mlx_hook(mlx.win, 2, 0, &keys_pressed, &mlx);
 	mlx_hook(mlx.win, 3, 0, &plane_controls2, &mlx);
+	// mlx hook for mouse
+	mlx_hook(mlx.win, 6, 0, &mouse_controls, &mlx);
+	// mlx_mouse_hook(mlx.win, &mouse_controls2, &mlx);
 	mlx_loop(mlx.p_mlx);
 }

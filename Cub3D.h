@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 03:58:31 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/30 05:44:09 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ typedef struct s_mlx
 	int				control_keys[8];
 	float			fov;
 	float			sreen_dist;
+	int				mouse;
 }					t_mlx;
 
 /*           parcing        */
@@ -202,7 +203,7 @@ void				update(t_mlx *mlx);
 void				transparent_Bg(t_mlx *mlx, int img_width, int img_height);
 void				drawMap(t_mlx *mlx);
 void				putPlayer(t_mlx *mlx);
-void				rayCaster(t_mlx *mlx);
+void				ray_caster(t_mlx *mlx);
 void				update_minimap(t_mlx *mlx);
 
 /*             3d rendring*/
@@ -212,4 +213,5 @@ int					plane_controls2(int key, t_mlx *mlx);
 
 /*                tools   */
 int					min(int a, int b);
+void				putPlayer(t_mlx *mlx);
 #endif

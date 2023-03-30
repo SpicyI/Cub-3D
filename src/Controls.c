@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 04:42:33 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/30 05:46:28 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,14 @@ void	move_down(t_mlx *mlx, float step_x, float step_y)
 
 void	arrows(t_mlx *mlx, float step_x, float step_y)
 {
-	if (mlx->control_keys[LEFT_ARROW] == PRESSED)
+	if (mlx->control_keys[LEFT_ARROW] == PRESSED || mlx->mouse == -1)
 	{
 		mlx->_p.player_angle -= mlx->_p.rotation_speed;
 	}
 	if (mlx->control_keys[DOWN_ARROW] == PRESSED
 		|| mlx->control_keys[S_KEY] == PRESSED)
 		move_down(mlx, step_x, step_y);
-	if (mlx->control_keys[RIGHT_ARROW] == PRESSED)
+	if (mlx->control_keys[RIGHT_ARROW] == PRESSED || mlx->mouse == 1)
 	{
 		mlx->_p.player_angle += mlx->_p.rotation_speed;
 	}
