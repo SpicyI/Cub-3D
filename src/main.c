@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 05:48:14 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/31 04:07:00 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	init_data(t_mlx *mlx, t_components *comp)
 	mlx->_p.player_x = (11 * mlx->_m.map_scale);
 	mlx->_p.player_y = (11 * mlx->_m.map_scale);
 	mlx->_p.player_angle = M_PI / 2;
-	mlx->_p.pmovment_speed = 6;
-	mlx->_p.rotation_speed = 6 * (M_PI / 180);
+	mlx->_p.pmovment_speed = 10;
+	mlx->_p.rotation_speed = 4 * (M_PI / 180);
 	mlx->_m.display_map = 1;
 	mlx->_m.img_xpos = 100 - mlx->_p.player_x;
 	mlx->_m.img_ypos = 100 - mlx->_p.player_y;
@@ -41,6 +41,24 @@ void	init_data(t_mlx *mlx, t_components *comp)
 	mlx->fov = 60 * (M_PI / 180);
 	mlx->sreen_dist = (SCREEN_WIDTH / 2) / tan(mlx->fov / 2);
 	mlx->mouse = 0;
+	mlx->_mo.mouse_x = SCREEN_WIDTH / 2;
+	mlx->_mo.mouse_y = SCREEN_HEIGHT / 2;
+	mlx->_mo.mouse_angle = 0;
+	mlx->control_keys[LEFT_ARROW] = RELEASED;
+
+	mlx->control_keys[RIGHT_ARROW] = RELEASED;
+
+	mlx->control_keys[DOWN_ARROW] = RELEASED;
+
+	mlx->control_keys[UP_ARROW] = RELEASED;
+
+	mlx->control_keys[W_KEY] = RELEASED;
+
+	mlx->control_keys[A_KEY] = RELEASED;
+
+	mlx->control_keys[S_KEY] = RELEASED;
+
+	mlx->control_keys[D_KEY] = RELEASED;
 }
 
 void	put_intro(t_mlx *mlx)
@@ -60,20 +78,28 @@ void	put_intro(t_mlx *mlx)
 
 int mouse_controls(int x, int y, t_mlx *mlx)
 {
+
+	y++;
 	mlx->on_change = 1;
-	if (x - SCREEN_WIDTH / 2 > 100)
-		mlx->mouse = 1;
-	else if (x - SCREEN_WIDTH / 2 <  -100)
+	// if (x - SCREEN_WIDTH / 2 > 100)
+	// 	mlx->mouse = 1;
+	// else if (x - SCREEN_WIDTH / 2 <  -100)
+	// 	mlx->mouse = -1;
+	mlx->mouse = 1;
+	// if (x > SCREEN_WIDTH)
+	// 	x = SCREEN_WIDTH;
+	// if(x < 0)
+	// 	x = 0;
+	int mouse_step;
+	mouse_step = x - mlx->_mo.mouse_x;
+	mlx->_mo.mouse_angle = atan(abs(mouse_step) / mlx->sreen_dist) / 2;
+	if(mouse_step < 0)
 		mlx->mouse = -1;
-	printf(" x: %d, y: %d\n", x, y);
+	else if (mouse_step > 0)
+		mlx->mouse = 1;
 	return (0);
 }
-int mouse_controls2(int button, int x, int y, t_mlx *mlx)
-{
-	mlx->on_change = 1;
-	printf("button: %d x: %d, y: %d\n", button,x, y);
-	return (0);
-}
+
 
 int	main(int argc, char **argv)
 {
@@ -94,6 +120,5 @@ int	main(int argc, char **argv)
 	mlx_hook(mlx.win, 3, 0, &plane_controls2, &mlx);
 	// mlx hook for mouse
 	mlx_hook(mlx.win, 6, 0, &mouse_controls, &mlx);
-	// mlx_mouse_hook(mlx.win, &mouse_controls2, &mlx);
 	mlx_loop(mlx.p_mlx);
 }

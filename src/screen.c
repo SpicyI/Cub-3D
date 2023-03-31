@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 04:51:26 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/31 04:18:20 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	putWalls(t_mlx *mlx)
 	while (x < SCREEN_WIDTH)
 	{
 		// calculate the wall height
-		wallHeight = (SCALEFACTOR / mlx->distances[(int)(x * 0.4 )]) * mlx->sreen_dist;
+		wallHeight = (mlx->_m.map_scale / mlx->distances[x]) * mlx->sreen_dist;
 		if (wallHeight >= SCREEN_HEIGHT)
 			wallHeight = SCREEN_HEIGHT;
 		i = 0;
@@ -72,7 +72,7 @@ void	putWalls(t_mlx *mlx)
 		// draw the wall strip
 		while (i < wallHeight)
 		{
-			my_mlx_pixel_put(&tmp, x, y + i, shader(mlx->ray_color[(int)(x * 0.4)], wallHeight * 400
+			my_mlx_pixel_put(&tmp, x, y + i, shader(METAL, wallHeight * 400
 						/ SCREEN_HEIGHT));
 			i++;
 		}

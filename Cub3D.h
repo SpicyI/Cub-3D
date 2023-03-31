@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 05:44:09 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/03/31 04:16:24 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 # define PI 3.1415926535
 # define SCREEN_WIDTH 1280
 # define SCREEN_HEIGHT 720
-# define RAYNUMBER SCREEN_WIDTH * 0.4
-# define SCALEFACTOR 100
+# define RAYNUMBER SCREEN_WIDTH
+# define SCALEFACTOR 24
 
 // print colors
 # define RED "\x1B[31m"
@@ -78,6 +78,23 @@ enum				e_keys
 	S_KEY,
 	D_KEY
 };
+
+typedef struct s_inter
+{
+	float x_inter;
+	float y_inter;
+	float xstep;
+	float ystep;
+	float hit_x;
+	float hit_y;
+}		t_inter;
+
+typedef struct s_mouse
+{
+	int 			mouse_x;
+	int 			mouse_y;
+	float 			mouse_angle;
+} t_mouse;
 
 typedef struct s_bloc
 {
@@ -163,6 +180,7 @@ typedef struct s_mlx
 	float			fov;
 	float			sreen_dist;
 	int				mouse;
+	t_mouse			_mo;
 }					t_mlx;
 
 /*           parcing        */
