@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/01 01:11:45 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/01 01:53:54 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ typedef struct s_mouse
 	int 			mouse_x;
 	int 			mouse_y;
 	float 			mouse_angle;
+	int			    y_offset;	
 } t_mouse;
 
 typedef struct s_bloc

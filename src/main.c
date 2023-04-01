@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/01 01:11:14 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/01 05:03:40 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	init_data(t_mlx *mlx, t_components *comp)
 	mlx->_p.player_x = (11 * mlx->_m.map_scale);
 	mlx->_p.player_y = (11 * mlx->_m.map_scale);
 	mlx->_p.player_angle = M_PI / 2;
-	mlx->_p.pmovment_speed = 10;
+	mlx->_p.pmovment_speed = 5;
 	mlx->_p.rotation_speed = 4 * (M_PI / 180);
 	mlx->_m.display_map = 1;
 	mlx->_m.img_xpos = 100 - mlx->_p.player_x;
@@ -44,6 +44,7 @@ void	init_data(t_mlx *mlx, t_components *comp)
 	mlx->_mo.mouse_x = SCREEN_WIDTH / 2;
 	mlx->_mo.mouse_y = SCREEN_HEIGHT / 2;
 	mlx->_mo.mouse_angle = 0;
+	mlx->_mo.y_offset = 0;
 	mlx->control_keys[LEFT_ARROW] = RELEASED;
 
 	mlx->control_keys[RIGHT_ARROW] = RELEASED;
@@ -79,14 +80,14 @@ void	put_intro(t_mlx *mlx)
 int mouse_controls(int x, int y, t_mlx *mlx)
 {
 
-	int mouse_step = y;
+	int mouse_step = 0;
 
 	
-	mlx_mouse_hide();
-	if (x != mlx->_mo.mouse_x)
+	// mlx_mouse_hide();
+	if (x != mlx->_mo.mouse_x || y != mlx->_mo.mouse_y)
 	{
-		
 		mlx->mouse = 1;
+		mlx->_mo.y_offset = ((y - (SCREEN_HEIGHT / 2)) * -1) / 2;
 		mouse_step = x - mlx->_mo.mouse_x;
 		mlx->_mo.mouse_angle = atan(abs(mouse_step / 2) / mlx->sreen_dist);
 		if(mouse_step < 0)
@@ -97,8 +98,21 @@ int mouse_controls(int x, int y, t_mlx *mlx)
 		if (mlx->_mo.mouse_x > SCREEN_WIDTH || mlx->_mo.mouse_x < 0)
 		{
 			mlx->_mo.mouse_x = SCREEN_WIDTH / 2;
-			mlx_mouse_move(mlx->win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+			mlx_mouse_move(mlx->win, SCREEN_WIDTH / 2, y);
 		}	
+		if (y > (SCREEN_HEIGHT / 2) + 100)
+		{
+			mlx->_mo.mouse_y = SCREEN_HEIGHT / 2;
+			mlx_mouse_move(mlx->win,mlx->_mo.mouse_x, (SCREEN_HEIGHT / 2) + 100);
+		}
+		else if (y < (SCREEN_HEIGHT / 2) - 100)
+		{
+			mlx->_mo.mouse_y = SCREEN_HEIGHT / 2;
+			mlx_mouse_move(mlx->win, mlx->_mo.mouse_x, (SCREEN_HEIGHT / 2) - 100);
+		}
+		else
+			mlx->_mo.mouse_y = y;
+
 	}
 	return (0);
 }

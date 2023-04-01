@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/31 04:18:20 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/01 05:05:12 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	putWalls(t_mlx *mlx)
 	int		y;
 	int		i;
 	int		wallHeight;
+	int 	offset;
 	t_mlx	tmp;
 
 	x = 0;
@@ -52,32 +53,41 @@ void	putWalls(t_mlx *mlx)
 			wallHeight = SCREEN_HEIGHT;
 		i = 0;
 		// offset the middle of the screen
-		y = (SCREEN_HEIGHT / 2) - (wallHeight / 2);
-		// draw the ceiling
-		while (i < y)
+		offset = (SCREEN_HEIGHT / 2) + mlx->_mo.y_offset;
+		if (offset < 0)
+			offset = 200;
+		y = offset - (wallHeight / 2);
+		if (y < 0)
 		{
-			my_mlx_pixel_put(&tmp, x, i, shader(SKYCOLOR, ((SCREEN_HEIGHT / 2)
-							- i) * 100 / (SCREEN_HEIGHT / 2)));
-			i++;
+			wallHeight += y;
+			y = 0;
 		}
-		// draw the floor
-		i += wallHeight;
-		while (i < SCREEN_HEIGHT)
+		if(y > SCREEN_HEIGHT)
+			y = SCREEN_HEIGHT;
+		// draw the wall strip
+		while (i < wallHeight && y + i < SCREEN_HEIGHT)
 		{
-			my_mlx_pixel_put(&tmp, x, i, shader(GROUNDCOLOR, (i - (SCREEN_HEIGHT
-								/ 2)) * 100 / (SCREEN_HEIGHT / 2)));
+			my_mlx_pixel_put(&tmp, x, y + i, shader(mlx->ray_color[x], wallHeight * 100
+						/ SCREEN_HEIGHT));
 			i++;
 		}
 		i = 0;
-		// draw the wall strip
-		while (i < wallHeight)
+		// draw the ceiling
+		while (i < y)
 		{
-			my_mlx_pixel_put(&tmp, x, y + i, shader(METAL, wallHeight * 400
-						/ SCREEN_HEIGHT));
+			my_mlx_pixel_put(&tmp, x, i, shader(SKYCOLOR, (offset - i) * 100 / offset + 1));
+			i++;
+		}
+		// draw the floor
+		i += wallHeight ;
+		while (i < SCREEN_HEIGHT)
+		{
+			my_mlx_pixel_put(&tmp, x, i, shader(GROUNDCOLOR,i * 100 / SCREEN_HEIGHT));
 			i++;
 		}
 		x++;
 	}
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, tmp.img, 0, 0);
 	mlx_destroy_image(mlx->p_mlx, tmp.img);
+	// mlx->_mo.y_offset = 0;
 }
