@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/31 04:07:00 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/01 01:11:14 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,24 +79,27 @@ void	put_intro(t_mlx *mlx)
 int mouse_controls(int x, int y, t_mlx *mlx)
 {
 
-	y++;
-	mlx->on_change = 1;
-	// if (x - SCREEN_WIDTH / 2 > 100)
-	// 	mlx->mouse = 1;
-	// else if (x - SCREEN_WIDTH / 2 <  -100)
-	// 	mlx->mouse = -1;
-	mlx->mouse = 1;
-	// if (x > SCREEN_WIDTH)
-	// 	x = SCREEN_WIDTH;
-	// if(x < 0)
-	// 	x = 0;
-	int mouse_step;
-	mouse_step = x - mlx->_mo.mouse_x;
-	mlx->_mo.mouse_angle = atan(abs(mouse_step) / mlx->sreen_dist) / 2;
-	if(mouse_step < 0)
-		mlx->mouse = -1;
-	else if (mouse_step > 0)
+	int mouse_step = y;
+
+	
+	mlx_mouse_hide();
+	if (x != mlx->_mo.mouse_x)
+	{
+		
 		mlx->mouse = 1;
+		mouse_step = x - mlx->_mo.mouse_x;
+		mlx->_mo.mouse_angle = atan(abs(mouse_step / 2) / mlx->sreen_dist);
+		if(mouse_step < 0)
+			mlx->mouse = -1;
+		else if (mouse_step >= 0)
+			mlx->mouse = 1;
+		mlx->_mo.mouse_x = x;
+		if (mlx->_mo.mouse_x > SCREEN_WIDTH || mlx->_mo.mouse_x < 0)
+		{
+			mlx->_mo.mouse_x = SCREEN_WIDTH / 2;
+			mlx_mouse_move(mlx->win, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		}	
+	}
 	return (0);
 }
 

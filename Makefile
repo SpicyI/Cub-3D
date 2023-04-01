@@ -5,7 +5,7 @@ MLX_FLAGS= -lmlx -framework OpenGL -framework AppKit
 NAME = Cub3D
 EXT = .c
 SRCDIR = ./SRC
-HEADERS = $(wildcard ../*.h);
+MLXLIB = mlx/libmlx.a
 OBJDIR = obj
 OBJ_DIR= mkdir -p obj
 
@@ -18,12 +18,12 @@ DELOBJ = $(OBJ)
 all: $(NAME)
 
 
-$(NAME): $(OBJ) $(HEADERS)
-	$(CC) $(CFLAGS) $(MLX_FLAGS) -o $@ $(OBJ)
+$(NAME): $(OBJ) 
+	$(CC) $(OBJ) -o $(NAME) $(MLXLIB) $(CFLAGS) $(MLX_FLAGS) -I mlx/mlx.h
 
-$(OBJDIR)/%.o: $(SRCDIR)/%$(EXT) $(HEADERS)
+$(OBJDIR)/%.o: $(SRCDIR)/%$(EXT) 
 	$(OBJ_DIR)
-	$(CC) $(CFLAGS)  -I .. -o $@ -c $<
+	$(CC) $(CFLAGS)   -o $@ -c $<
 
 
 .PHONY: clean

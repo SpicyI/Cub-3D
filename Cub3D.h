@@ -6,14 +6,14 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/31 04:16:24 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/01 01:11:45 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 //   includes
-# include "mlx.h"
+# include <mlx.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <math.h>
@@ -232,4 +232,7 @@ int					plane_controls2(int key, t_mlx *mlx);
 /*                tools   */
 int					min(int a, int b);
 void				putPlayer(t_mlx *mlx);
+int     mlx_mouse_hide();
+int     mlx_mouse_show();
+int     mlx_mouse_move();
 #endif
