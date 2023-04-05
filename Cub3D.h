@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/01 01:53:54 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/05 05:30:11 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,13 @@
 # define STANDING 0
 // texture data
 
+enum 
+{
+	NO,
+	SO,
+	WE,
+	EA,
+};
 enum				e_keys
 {
 	UP_ARROW,
@@ -78,6 +85,23 @@ enum				e_keys
 	S_KEY,
 	D_KEY
 };
+
+
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+	int		width;
+	int		height;
+}				t_data;
+
+typedef struct s_side {
+	int 	tex; // west, east, north or south
+	int 	x;
+}				t_side;
+
 
 typedef struct s_inter
 {
@@ -104,6 +128,7 @@ typedef struct s_bloc
 	int 			bloc_x;
 	int 			bloc_y;
 }					t_bloc;
+
 typedef struct t_elements
 {
 	char			*n_texture;
@@ -119,6 +144,7 @@ typedef struct t_components
 	t_elements		elements;
 	char			**map;
 }					t_components;
+
 
 // ray tools
 typedef struct s_ray
@@ -161,6 +187,10 @@ typedef struct s_player
 	void			*icon_img;
 }					t_player;
 
+
+// todo: creat an array of t_data to store all the textures
+// todo: get the x pos for the texture
+
 //genaral data
 typedef struct s_mlx
 {
@@ -175,7 +205,8 @@ typedef struct s_mlx
 	t_player		_p;
 	t_elements		_e;
 	float			*distances;
-	int				*ray_color;
+	t_side				*_s;
+	t_data			*_t;
 	int				on_change;
 	int				control_keys[8];
 	float			fov;
@@ -236,4 +267,5 @@ void				putPlayer(t_mlx *mlx);
 int     mlx_mouse_hide();
 int     mlx_mouse_show();
 int     mlx_mouse_move();
+int		get_img_color(t_data *data, int x, int y);
 #endif

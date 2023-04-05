@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 18:45:46 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/05 19:49:22 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	move_up(t_mlx *mlx, float step_x, float step_y)
 
 	player_x = mlx->_p.player_x / mlx->_m.map_scale;
 	player_y = mlx->_p.player_y / mlx->_m.map_scale;
-	jump_posx = (mlx->_p.player_x + step_x ) / mlx->_m.map_scale;
-	jump_posy = (mlx->_p.player_y + step_y ) / mlx->_m.map_scale;
+	jump_posx = (mlx->_p.player_x + step_x) / mlx->_m.map_scale;
+	jump_posy = (mlx->_p.player_y + step_y) / mlx->_m.map_scale;
 	if (mlx->_m.map[player_y][jump_posx] != '1')
 		mlx->_p.player_x += step_x;
 	if (mlx->_m.map[jump_posy][player_x] != '1')
@@ -66,8 +66,8 @@ void	move_down(t_mlx *mlx, float step_x, float step_y)
 
 	player_x = mlx->_p.player_x / mlx->_m.map_scale;
 	player_y = mlx->_p.player_y / mlx->_m.map_scale;
-	jump_posx = (mlx->_p.player_x - step_x ) / mlx->_m.map_scale;
-	jump_posy = (mlx->_p.player_y - step_y ) / mlx->_m.map_scale;
+	jump_posx = (mlx->_p.player_x - step_x) / mlx->_m.map_scale;
+	jump_posy = (mlx->_p.player_y - step_y) / mlx->_m.map_scale;
 
 	if (mlx->_m.map[player_y][jump_posx] != '1')
 		mlx->_p.player_x -= step_x;
@@ -118,8 +118,8 @@ void	update(t_mlx *mlx)
 	float	step_x;
 	float	step_y;
 
-	step_x = cos(mlx->_p.player_angle) * mlx->_p.pmovment_speed;
-	step_y = sin(mlx->_p.player_angle) * mlx->_p.pmovment_speed;
+	step_x = (cos(mlx->_p.player_angle) * mlx->_p.pmovment_speed);
+	step_y = (sin(mlx->_p.player_angle) * mlx->_p.pmovment_speed);
 	if (mlx->mouse == 1)
 	{
 		mlx->_p.player_angle += mlx->_mo.mouse_angle;

@@ -6,27 +6,11 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/01 05:49:50 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/05 20:21:10 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Cub3D.h"
-
-// void	draw_ray(t_mlx *mlx, t_ray *ray)
-// {
-// 	if (mlx->_m.display_map > 0)
-// 	{
-// 		if ((ray->x / ray->scale_factor) * mlx->_m.map_scale < mlx->_p.player_x
-// 			+ 100 && (ray->y / ray->scale_factor)
-// 			* mlx->_m.map_scale < mlx->_p.player_y + 100)
-// 			my_mlx_pixel_put(mlx, (ray->x / ray->scale_factor)
-// 				* mlx->_m.map_scale, (ray->y / ray->scale_factor)
-// 				* mlx->_m.map_scale, RAYCOLOR);
-// 	}
-// 	else
-// 		my_mlx_pixel_put(mlx, (ray->x / ray->scale_factor) * mlx->_m.map_scale,
-// 			(ray->y / ray->scale_factor) * mlx->_m.map_scale, RAYCOLOR);
-// }
 
 int hit_wall(t_mlx *mlx, float x, float y)
 {
@@ -166,35 +150,41 @@ void	init_ray(t_ray *ray, t_mlx *mlx)
 	ray->step = mlx->fov / ray->rays_number;
 }
 
-int	get_color(t_ray *ray, t_mlx *mlx)
+t_side	get_color(t_ray *ray, t_mlx *mlx )
 {
-	int	color;
-
-	color = 0;
+	float floored_x;
+	float floored_y;
+	t_side info; // to store x of texture and which texture to use
+	
+	floored_x = floor(ray->hit_point[X] / mlx->_m.map_scale) * mlx->_m.map_scale;
+	floored_y = floor(ray->hit_point[Y] / mlx->_m.map_scale) * mlx->_m.map_scale;
+	info.x = 0;
 	if (ray->hit_point[Y] - mlx->_p.player_y < 0 && ray->hit_side == HORIZONTAL)
-		color = 0x00555652;
-	if (ray->hit_point[Y] - mlx->_p.player_y >= 0
-		&& ray->hit_side == HORIZONTAL)
-		color = METAL;
+	{
+		info.tex = NO;
+		info.x = ((ray->hit_point[X] - floored_x)  / mlx->_m.map_scale) * mlx->_t[NO].width;
+	}
+	if (ray->hit_point[Y] - mlx->_p.player_y >= 0 && ray->hit_side == HORIZONTAL)
+	{
+		info.tex = SO;
+		info.x = ((ray->hit_point[X] - floored_x)/ mlx->_m.map_scale) *  mlx->_t[SO].width;
+		// invert texture
+		info.x = mlx->_t[SO].width - info.x  - 1;
+	}
 	if (ray->hit_point[X] - mlx->_p.player_x < 0 && ray->hit_side == VERTICAL)
-		color = shader(WHITE, 50 );
+	{
+		info.tex = WE;
+		info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[WE].width;
+		// invert texture
+		info.x = mlx->_t[WE].width - info.x - 1;
+	}
 	if (ray->hit_point[X] - mlx->_p.player_x >= 0 && ray->hit_side == VERTICAL)
-		color = shader(0x00505652, 40 );
-	return (color);
+	{
+		info.tex = EA;
+		info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[EA].width;
+	}
+	return (info);
 }
-
-// int	hit_wall(t_mlx *mlx, t_ray *ray, int i)
-// {
-// 	ray->x = floor(cos(ray->ray_angle) * i) + mlx->_p.player_x;
-// 	if (mlx->_m.map[(int)ray->y / mlx->_m.map_scale][(int)ray->x
-// 		/ mlx->_m.map_scale] == '1')
-// 		return (1);
-// 	ray->y = floor(sin(ray->ray_angle) * i) + (mlx->_p.player_y);
-// 	if (mlx->_m.map[(int)ray->y / mlx->_m.map_scale][(int)ray->x
-// 		/ mlx->_m.map_scale] == '1')
-// 		return (1);
-// 	return (0);
-// }
 
 void	draw_ray(t_mlx *mlx, t_ray *ray)
 {
@@ -233,7 +223,7 @@ void	ray_caster(t_mlx *mlx)
 
 	init_ray(&ray, mlx);
 	i = 0;
-	while (i < ray.rays_number)
+	while (i  < ray.rays_number)
 	{
 		mlx->distances[i] = cast(&ray, mlx);
 		if (mlx->_m.display_map > 0)
@@ -250,10 +240,15 @@ void	ray_caster(t_mlx *mlx)
 			my_mlx_pixel_put(mlx, ray.hit_point[X], ray.hit_point[Y], 0x00FF0000);
 			my_mlx_pixel_put(mlx, ray.hit_point[X] - 1, ray.hit_point[Y] - 1, 0x00FF0000);
 	}
-		mlx->ray_color[i] = get_color(&ray, mlx);
+		mlx->_s[i] = get_color(&ray, mlx);
+		if (mlx->_s[i].tex > 3 || mlx->_s[i].tex < 0)
+			printf("x = %d , tex = %d", mlx->_s[i].x, mlx->_s[i].tex);
 		ray.ray_angle += ray.step;
 		i++;
 	}
-	// drawline(mlx, mlx->_p.player_angle - (mlx->fov / 2));
-	// drawline(mlx, ray.max_angle);
+	// printf("north(%d, %d), ", mlx->_t.north.width, mlx->_t.north.height);
+	// printf("south(%d, %d), ", mlx->_t.south.width, mlx->_t.south.height);
+	// printf("east(%d, %d), ", mlx->_t.east.width, mlx->_t.east.height);
+	// printf("west(%d, %d)", mlx->_t.west.width, mlx->_t.west.height);
+	// exit(0);
 }
