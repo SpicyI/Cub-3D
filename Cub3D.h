@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 00:38:21 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 03:52:44 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <pthread.h>
+#include <strings.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -68,6 +69,7 @@ enum
 	SO,
 	WE,
 	EA,
+	DR,
 };
 enum				e_keys
 {
@@ -97,6 +99,11 @@ typedef struct s_side {
 	int 	x;
 }				t_side;
 
+typedef struct s_door
+{
+	int		door_exist;
+	float   door_dist;
+}				t_door;
 
 typedef struct s_inter
 {
@@ -106,6 +113,9 @@ typedef struct s_inter
 	float ystep;
 	float hit_x;
 	float hit_y;
+	float door_x;
+	float door_y;
+	int  hit_door;
 }		t_inter;
 
 typedef struct s_mouse
@@ -215,6 +225,7 @@ typedef struct s_mlx
 	int 			shoot;
 	pthread_t		thread;
 	t_mouse			_mo;
+	t_door			*_d;
 }					t_mlx;
 
 /*           parcing        */

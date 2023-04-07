@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 00:52:19 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 03:43:51 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	min(int a, int b)
 void init_texture(t_mlx *mlx, t_components *comp)
 {
 	(void)comp;
-	mlx->_t = malloc(sizeof(t_data) * 4);
+	mlx->_t = malloc(sizeof(t_data) * 5);
 	mlx->_s = malloc(sizeof(t_side) * RAYNUMBER);
 	mlx->_t[NO].img = mlx_xpm_file_to_image(mlx->p_mlx, comp->elements.n_texture,
 			&mlx->_t[NO].width, &mlx->_t[NO].height);
@@ -32,8 +32,10 @@ void init_texture(t_mlx *mlx, t_components *comp)
 			&mlx->_t[WE].width, &mlx->_t[WE].height);
 	mlx->_t[EA].img = mlx_xpm_file_to_image(mlx->p_mlx, comp->elements.e_texture,
 			&mlx->_t[EA].width, &mlx->_t[EA].height);
+	mlx->_t[DR].img = mlx_xpm_file_to_image(mlx->p_mlx, "testxpm/green.xpm",
+			&mlx->_t[DR].width, &mlx->_t[DR].height);
 	if (mlx->_t[NO].img == NULL || mlx->_t[SO].img == NULL || mlx->_t[WE].img == NULL
-			|| mlx->_t[EA].img == NULL)
+			|| mlx->_t[EA].img == NULL || mlx->_t[DR].img == NULL)
 	{
 		printf("Error reading texture files \n");
 		exit(0);
@@ -47,6 +49,8 @@ void init_texture(t_mlx *mlx, t_components *comp)
 			&mlx->_t[WE].line_length, &mlx->_t[WE].endian);
 	mlx->_t[EA].addr = mlx_get_data_addr(mlx->_t[EA].img, &mlx->_t[EA].bits_per_pixel,
 			&mlx->_t[EA].line_length, &mlx->_t[EA].endian);
+	mlx->_t[DR].addr = mlx_get_data_addr(mlx->_t[DR].img, &mlx->_t[DR].bits_per_pixel,
+			&mlx->_t[DR].line_length, &mlx->_t[DR].endian);
 }
 
 void init_map(t_mlx *mlx, t_components *comp)
@@ -153,6 +157,7 @@ void	init_data(t_mlx *mlx, t_components *comp)
 	init_loadscreen(mlx);
 	init_gun(mlx);
 	mlx->distances = malloc(sizeof(float) * RAYNUMBER);
+	mlx->_d = calloc(sizeof(t_door) * RAYNUMBER);
 	mlx->fov = 60 * (M_PI / 180);
 	mlx->sreen_dist = (SCREEN_WIDTH / 2) / tan(mlx->fov / 2);
 	mlx->mouse = 0;

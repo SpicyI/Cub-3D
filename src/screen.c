@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/06 18:32:02 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 03:26:41 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,23 @@ void	putWalls(t_mlx *mlx)
 		while (i < y && i < SCREEN_HEIGHT)
 		{
 			my_mlx_pixel_put(&tmp, x, i, shader(SKYCOLOR, 100 - ((i / y) * 100)));
+			i++;
+		}
+
+		// draw the door over the sceen
+		int door_height = (mlx->_m.map_scale / 1/* distance to the door*/) * mlx->sreen_dist;
+		y = offset - (door_height / 2);
+		if(y > SCREEN_HEIGHT)
+			y = SCREEN_HEIGHT;
+		i = 0 - y;
+		while (i < door_height && y + i < SCREEN_HEIGHT)
+		{
+			if (y + i < 0)
+			{
+				i++;
+				continue;
+			}
+			my_mlx_pixel_put(&tmp, x, y + i, 0x80FF0000);
 			i++;
 		}
 		x++;

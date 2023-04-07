@@ -6,20 +6,25 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 01:10:34 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 03:51:52 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Cub3D.h"
 
-int hit_wall(t_mlx *mlx, float x, float y)
+int hit_wall(t_mlx *mlx, float x, float y, t_inter *r)
 {
 	if (x / mlx->_m.map_scale < 0 || x / mlx->_m.map_scale > mlx->_m.map_width
 		|| y / mlx->_m.map_scale < 0 || y / mlx->_m.map_scale > mlx->_m.map_height)
 		return (1);
+	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'D')
+	{
+		r->door_x = x;
+		r->door_y = y;
+	};
 	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == '1')
 			return (1);
-		return (0);
+	return (0);
 }
 float get_distance(t_mlx *mlx, t_inter *r ,t_ray *ray, int side)
 {
@@ -37,12 +42,12 @@ float get_distance(t_mlx *mlx, t_inter *r ,t_ray *ray, int side)
 		{
 				if (!(ray->ray_angle < M_PI && ray->ray_angle > 0))
 				{
-					if(hit_wall(mlx, r->x_inter, r->y_inter - 1))
+					if(hit_wall(mlx, r->x_inter, r->y_inter - 1, r))
 						break ;
 				}
 				else
 				{
-					if(hit_wall(mlx, r->x_inter, r->y_inter))
+					if(hit_wall(mlx, r->x_inter, r->y_inter, r))
 						break ;
 				}
 		}
@@ -50,12 +55,12 @@ float get_distance(t_mlx *mlx, t_inter *r ,t_ray *ray, int side)
 		{
 			if (!(ray->ray_angle < M_PI / 2 || ray->ray_angle > 1.5 * M_PI))
 			{
-				if(hit_wall(mlx, r->x_inter - 1, r->y_inter))
+				if(hit_wall(mlx, r->x_inter - 1, r->y_inter, r))
 					break ;
 			}
 			else
 			{
-				if(hit_wall(mlx, r->x_inter, r->y_inter))
+				if(hit_wall(mlx, r->x_inter, r->y_inter, r))
 					break ;
 			}
 		}
@@ -154,32 +159,70 @@ t_side	get_color(t_ray *ray, t_mlx *mlx )
 {
 	float floored_x;
 	float floored_y;
+	int x; // for the door
+	int y; // for the door
 	t_side info;
 	
 	floored_x = floor(ray->hit_point[X] / mlx->_m.map_scale) * mlx->_m.map_scale;
 	floored_y = floor(ray->hit_point[Y] / mlx->_m.map_scale) * mlx->_m.map_scale;
+	x = ray->hit_point[X] / mlx->_m.map_scale;
+	y = ray->hit_point[Y] / mlx->_m.map_scale;
 	info.x = 0;
 	if (ray->hit_point[Y] - mlx->_p.player_y < 0 && ray->hit_side == HORIZONTAL)
 	{
-		info.tex = NO;
-		info.x = ((ray->hit_point[X] - floored_x)  / mlx->_m.map_scale) * mlx->_t[NO].width;
+		if (mlx->_m.map[y - 1][x] == 'D')
+		{
+			info.tex = DR;
+			info.x = ((ray->hit_point[X] - floored_x)  / mlx->_m.map_scale) * mlx->_t[DR].width;
+		}
+		else
+		{
+			info.tex = NO;
+			info.x = ((ray->hit_point[X] - floored_x)  / mlx->_m.map_scale) * mlx->_t[NO].width;
+		}
 	}
 	if (ray->hit_point[Y] - mlx->_p.player_y >= 0 && ray->hit_side == HORIZONTAL)
 	{
-		info.tex = SO;
-		info.x = ((ray->hit_point[X] - floored_x)/ mlx->_m.map_scale) *  mlx->_t[SO].width;
-		info.x = mlx->_t[SO].width - info.x  - 1;
+		if (mlx->_m.map[y][x] == 'D')
+		{
+			info.tex = DR;
+			info.x = ((ray->hit_point[X] - floored_x)/ mlx->_m.map_scale) *  mlx->_t[DR].width;
+			info.x = mlx->_t[DR].width - info.x  - 1;
+		}
+		else
+		{
+			info.tex = SO;
+			info.x = ((ray->hit_point[X] - floored_x)/ mlx->_m.map_scale) *  mlx->_t[SO].width;
+			info.x = mlx->_t[SO].width - info.x  - 1;
+		}
 	}
 	if (ray->hit_point[X] - mlx->_p.player_x < 0 && ray->hit_side == VERTICAL)
 	{
-		info.tex = WE;
-		info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[WE].width;
-		info.x = mlx->_t[WE].width - info.x - 1;
+		if (mlx->_m.map[y][x - 1] == 'D')
+		{
+			info.tex = DR;
+			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[DR].width;
+			info.x = mlx->_t[DR].width - info.x - 1;
+		}
+		else
+		{
+			info.tex = WE;
+			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[WE].width;
+			info.x = mlx->_t[WE].width - info.x - 1;
+		}
 	}
 	if (ray->hit_point[X] - mlx->_p.player_x >= 0 && ray->hit_side == VERTICAL)
 	{
-		info.tex = EA;
-		info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[EA].width;
+		if (mlx->_m.map[y][x] == 'D')
+		{
+			info.tex = DR;
+			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[DR].width;
+		}
+		else
+		{
+			info.tex = EA;
+			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[EA].width;
+		}
 	}
 	return (info);
 }

@@ -6,12 +6,41 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/06 01:30:29 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 03:04:52 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Cub3D.h"
 
+
+void open_door(t_mlx *mlx)
+{
+	float ray_angle;
+	int x;
+	int y;
+	int i = 0;
+
+	ray_angle = mlx->_p.player_angle;
+	while (i < 50)
+	{
+		x = (cos(ray_angle) * i) + mlx->_p.player_x;
+		y = (sin(ray_angle) * i) + mlx->_p.player_y;
+		if (mlx->_m.map[y / mlx->_m.map_scale][x / mlx->_m.map_scale] == 'D')
+		{
+			mlx->_m.map[y / mlx->_m.map_scale][x / mlx->_m.map_scale] = 'O';
+			break ;
+		}
+		else if (mlx->_m.map[y / mlx->_m.map_scale][x / mlx->_m.map_scale] == 'O')
+		{
+			if (mlx->_m.map[(int)mlx->_p.player_y/ mlx->_m.map_scale][ (int)mlx->_p.player_y/ mlx->_m.map_scale] != 'O')
+				mlx->_m.map[y / mlx->_m.map_scale][x / mlx->_m.map_scale] = 'D';
+			break ;
+		}
+		i++;
+	}
+	
+
+}
 int	keys_pressed(int key, t_mlx *mlx)
 {
 	mlx->on_change = 1;
@@ -37,6 +66,8 @@ int	keys_pressed(int key, t_mlx *mlx)
 		mlx->control_keys[S_KEY] = PRESSED;
 	if (key == 2)
 		mlx->control_keys[D_KEY] = PRESSED;
+	if (key == 49)
+		open_door(mlx);
 	return (0);
 }
 
@@ -57,9 +88,9 @@ void	move_up(t_mlx *mlx, float step_x, float step_y)
 	if (player_y > mlx->_m.map_height || player_x > mlx->_m.map_width
 		|| jump_posx > mlx->_m.map_width || jump_posy > mlx->_m.map_height)
 		return ;
-	if (mlx->_m.map[player_y][jump_posx] != '1')
+	if (mlx->_m.map[player_y][jump_posx] != '1' && mlx->_m.map[player_y][jump_posx] != 'D')
 		mlx->_p.player_x += step_x;
-	if (mlx->_m.map[jump_posy][player_x] != '1')
+	if (mlx->_m.map[jump_posy][player_x] != '1' && mlx->_m.map[jump_posy][player_x] != 'D')
 		mlx->_p.player_y += step_y;
 }
 
@@ -80,9 +111,9 @@ void	move_down(t_mlx *mlx, float step_x, float step_y)
 	if (player_y > mlx->_m.map_height || player_x > mlx->_m.map_width
 		|| jump_posx > mlx->_m.map_width || jump_posy > mlx->_m.map_height)
 		return ;
-	if (mlx->_m.map[player_y][jump_posx] != '1')
+	if (mlx->_m.map[player_y][jump_posx] != '1' && mlx->_m.map[player_y][jump_posx] != 'D')
 		mlx->_p.player_x -= step_x;
-	if (mlx->_m.map[jump_posy][player_x] != '1')
+	if (mlx->_m.map[jump_posy][player_x] != '1' && mlx->_m.map[jump_posy][player_x] != 'D')
 		mlx->_p.player_y -= step_y;
 }
 
