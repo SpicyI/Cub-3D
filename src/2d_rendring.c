@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 03:51:52 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 05:52:18 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,21 @@ int hit_wall(t_mlx *mlx, float x, float y, t_inter *r)
 	if (x / mlx->_m.map_scale < 0 || x / mlx->_m.map_scale > mlx->_m.map_width
 		|| y / mlx->_m.map_scale < 0 || y / mlx->_m.map_scale > mlx->_m.map_height)
 		return (1);
-	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'D')
+	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'D' ||
+		mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'O')
 	{
-		r->door_x = x;
-		r->door_y = y;
+		if (!r->hit_door)
+		{
+			r->door_x = x;
+			r->door_y = y;
+			r->door_dest = sqrt(pow(mlx->_p.player_x - r->door_x, 2) + pow(mlx->_p.player_y - r->door_y, 2));
+			r->hit_door = 1;
+			if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'D')
+				r->doorcolor = 0xBBFF0000;
+			else if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'O')
+				r->doorcolor = 0xBB00FF00;
+			my_mlx_pixel_put(mlx, x, y, 0x0000FF00);
+		}
 	};
 	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == '1')
 			return (1);
@@ -92,6 +103,8 @@ float horizontal_hit(t_mlx *mlx , t_ray * ray, t_inter *r)
 	if (isnan(r->x_inter))
 		r->x_inter = 0;
 	hit_distance = get_distance(mlx, r, ray, HORIZONTAL);
+	if (!r->hit_door)
+		r->door_dest = hit_distance;
 	return (hit_distance);
 }
 
@@ -115,10 +128,12 @@ float vertical_hit(t_mlx *mlx , t_ray *ray , t_inter *r)
 		r->ystep *= -1;
 	r->y_inter = mlx->_p.player_y + ((r->x_inter - mlx->_p.player_x) * tan(ray->ray_angle));
 	hit_distance = get_distance(mlx, r, ray, VERTICAL);
+	if (!r->hit_door)
+		r->door_dest = hit_distance;
 	return (hit_distance);
 }
 
-float	cast(t_ray *ray, t_mlx *mlx)
+float	cast(t_ray *ray, t_mlx *mlx, int i)
 {
 	float	distance_to_wall;
 	float ver_distance;
@@ -127,6 +142,8 @@ float	cast(t_ray *ray, t_mlx *mlx)
 
 	r[0].x_inter = 0;
 	r[0].y_inter = 0;
+	r[0].hit_door = 0;
+	r[1].hit_door = 0;
 	ver_distance = vertical_hit(mlx, ray , &r[0]);
 	hor_distance = horizontal_hit(mlx, ray ,&r[1]);
 	if (hor_distance < ver_distance)
@@ -144,6 +161,43 @@ float	cast(t_ray *ray, t_mlx *mlx)
 		ray->hit_point[Y] = r[0].hit_y;
 	}
 	distance_to_wall *= cos(mlx->_p.player_angle - ray->ray_angle);
+	if (r[0].hit_door && r[1].hit_door)
+	{
+		if (r[0].door_dest < r[1].door_dest)
+		{
+			mlx->_d[i].door_dist = r[0].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
+			mlx->_d[i].door_color = r[0].doorcolor;
+		}
+		else
+		{
+			mlx->_d[i].door_dist = r[1].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
+			mlx->_d[i].door_color = r[1].doorcolor;
+		}
+		if (mlx->_d[i].door_dist < distance_to_wall)
+			mlx->_d[i].door_exist = 1;
+		else
+			mlx->_d[i].door_exist = 0;
+	}
+	else if (r[0].hit_door && !r[1].hit_door)
+	{
+		mlx->_d[i].door_dist = r[0].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
+		mlx->_d[i].door_color = r[0].doorcolor;
+		if (mlx->_d[i].door_dist < distance_to_wall)
+			mlx->_d[i].door_exist = 1;
+		else
+			mlx->_d[i].door_exist = 0;;
+	}
+	else if (!r[0].hit_door && r[1].hit_door)
+	{
+		mlx->_d[i].door_dist = r[1].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
+		mlx->_d[i].door_color = r[1].doorcolor;
+		if (mlx->_d[i].door_dist < distance_to_wall)
+			mlx->_d[i].door_exist = 1;
+		else
+			mlx->_d[i].door_exist = 0;
+	}
+	else
+		mlx->_d[i].door_exist = 0;
 	return (distance_to_wall);
 }
 
@@ -248,7 +302,7 @@ void	ray_caster(t_mlx *mlx)
 	i = 0;
 	while (i  < ray.rays_number)
 	{
-		mlx->distances[i] = cast(&ray, mlx);
+		mlx->distances[i] = cast(&ray, mlx, i);
 		if (mlx->_m.display_map > 0)
 		{
 			if (ray.hit_point[X]  < mlx->_p.player_x

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 03:26:41 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 05:51:42 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,13 @@ void	putWalls(t_mlx *mlx)
 	tmp.img = mlx_new_image(mlx->p_mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	tmp.addr = mlx_get_data_addr(tmp.img, &tmp.bits_per_pixel, &tmp.line_length,
 			&mlx->endian);
+	offset = (SCREEN_HEIGHT / 2) + mlx->_mo.y_offset;
 	// fill the screen column by column
 	while (x < SCREEN_WIDTH)
 	{
 		// calculate the wall height
 		wallHeight = (mlx->_m.map_scale / mlx->distances[x]) * mlx->sreen_dist;
 		// offset the middle of the screen
-		offset = (SCREEN_HEIGHT / 2) + mlx->_mo.y_offset;
 		y = offset - (wallHeight / 2);
 		if(y > SCREEN_HEIGHT)
 			y = SCREEN_HEIGHT;
@@ -110,26 +110,43 @@ void	putWalls(t_mlx *mlx)
 			my_mlx_pixel_put(&tmp, x, i, shader(SKYCOLOR, 100 - ((i / y) * 100)));
 			i++;
 		}
-
-		// draw the door over the sceen
-		int door_height = (mlx->_m.map_scale / 1/* distance to the door*/) * mlx->sreen_dist;
-		y = offset - (door_height / 2);
-		if(y > SCREEN_HEIGHT)
-			y = SCREEN_HEIGHT;
-		i = 0 - y;
-		while (i < door_height && y + i < SCREEN_HEIGHT)
+		x++;
+	}
+	mlx_put_image_to_window(mlx->p_mlx, mlx->win, tmp.img, 0, 0);
+	mlx_destroy_image(mlx->p_mlx, tmp.img);
+	tmp.img = mlx_new_image(mlx->p_mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
+	tmp.addr = mlx_get_data_addr(tmp.img, &tmp.bits_per_pixel, &tmp.line_length,
+			&mlx->endian);
+	transparent_Bg(&tmp, SCREEN_WIDTH, SCREEN_HEIGHT);
+	x = 0;
+	y = 0;
+	int door_height;
+	while (x < SCREEN_WIDTH)
+	{
+		
+		if (mlx->_d[x].door_exist)
 		{
-			if (y + i < 0)
+			door_height = (mlx->_m.map_scale / mlx->_d[x].door_dist) * mlx->sreen_dist;
+			y = offset - (door_height / 2);
+			if(y > SCREEN_HEIGHT)
+				y = SCREEN_HEIGHT;
+			i = 0 - y;
+			while (i < door_height && y + i < SCREEN_HEIGHT)
 			{
+				if (y + i < 0)
+				{
+					i++;
+					continue;
+				}
+				my_mlx_pixel_put(&tmp, x, y + i, mlx->_d[x].door_color);
 				i++;
-				continue;
 			}
-			my_mlx_pixel_put(&tmp, x, y + i, 0x80FF0000);
-			i++;
 		}
 		x++;
 	}
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, tmp.img, 0, 0);
 	mlx_destroy_image(mlx->p_mlx, tmp.img);
+
+	
 	// mlx->_mo.y_offset = 0;
 }

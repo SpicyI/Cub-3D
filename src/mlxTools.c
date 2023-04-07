@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 03:45:46 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 04:19:48 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	render(t_mlx *mlx)
 		return (1);
 	}
 	update(mlx);
-	bzero(mlx->_d, sizeof(t_data) * RAYNUMBER);
+	bzero(mlx->_d, sizeof(t_door) * RAYNUMBER);
 	mlx_clear_window(mlx->p_mlx, mlx->win);
 	drawMap(mlx);
 	mlx->img = mlx_new_image(mlx->p_mlx, mlx->_m.map_width * mlx->_m.map_scale,

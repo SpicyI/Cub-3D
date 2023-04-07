@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 16:27:23 by ebelkhei          #+#    #+#             */
-/*   Updated: 2023/04/07 00:47:51 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 04:18:21 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ int *parse_rgb_2(char **colors)
 	int				*rgb;
 
 	i = 0;
-	rgb = malloc(3 * sizeof(unsigned char));
-	while (colors[++i])
+	rgb = malloc(3 * sizeof(int));
+	while (++i != 3 && colors[i])
 	{
 		n = ft_atoi(colors[i]);
 		if (n >= 0 && n <= 255)
