@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/05 05:31:25 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/06 22:26:33 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
 {
 	char	*dst;
 
+	if (x < 0 || x > SCREEN_WIDTH  || y < 0 || y > SCREEN_HEIGHT)
+		return ;
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
@@ -41,7 +43,10 @@ void	exit_game(t_mlx *mlx)
 int	render(t_mlx *mlx)
 {
 	if (!mlx->on_change)
-		return 1;
+	{
+		mlx_put_image_to_window(mlx->p_mlx, mlx->win,mlx->load_screen_img ,0 ,0);
+		return (1);
+	}
 	update(mlx);
 	mlx_clear_window(mlx->p_mlx, mlx->win);
 	drawMap(mlx);
@@ -56,9 +61,10 @@ int	render(t_mlx *mlx)
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->_m.map_img,mlx->_m.img_xpos ,mlx->_m.img_ypos);
 	mlx_destroy_image(mlx->p_mlx, mlx->_m.map_img);
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->_p.player_img,mlx->_m.img_xpos,mlx->_m.img_ypos);
+	if (mlx->_m.display_map > 0)
+		mlx_put_image_to_window(mlx->p_mlx, mlx->win,mlx->gun_img, SCREEN_WIDTH - 443 , SCREEN_HEIGHT/2 - 40);
 	putPlayer(mlx);
 	mlx_destroy_image(mlx->p_mlx, mlx->_p.player_img);
-	// mlx->on_change = 0;
 	mlx->mouse = 0;
 	mlx->_mo.mouse_angle = 0;
 	return (0);

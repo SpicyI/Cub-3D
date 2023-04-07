@@ -1,6 +1,6 @@
 CC = cc
-CFLAGS =  -Wall -Werror -Wextra #-fsanitize=address -g
-MLX_FLAGS= -lmlx -framework OpenGL -framework AppKit
+CFLAGS =  -Wall -Werror -Wextra #-fsanitize=address -g3
+MLX_FLAGS= -lmlx -framework OpenGL -framework AppKit -pthread 
 
 NAME = Cub3D
 EXT = .c

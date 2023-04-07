@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "cub3d.h": "c",
+        "Cub3D.h": "c",
         "complex": "c",
         "algorithm": "c"
     }

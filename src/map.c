@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   map.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/30 04:46:42 by del-khay          #+#    #+#             */
-/*   Updated: 2023/03/30 04:48:06 by del-khay         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../Cub3D.h"  
 
 void crop_img(t_mlx *mlx , int x , int y)
@@ -31,7 +19,7 @@ void crop_img(t_mlx *mlx , int x , int y)
 
 void draw_bloc(t_mlx *mlx , t_bloc *t)
 {
-	if (mlx->_m.map[t->y][t->x] != '1')
+	if (mlx->_m.map[t->y][t->x] != '1' && mlx->_m.map[t->y][t->x] != 'x')
 	{
 		if ((t->bloc_y + 1 == (t->y + 1) * mlx->_m.map_scale && (t->y
 					+ 1 < mlx->_m.map_height && mlx->_m.map[t->y
@@ -43,18 +31,21 @@ void draw_bloc(t_mlx *mlx , t_bloc *t)
 		else
 			my_mlx_pixel_put(mlx, t->bloc_x, t->bloc_y, FLOORCOLOR);
 	}
-	else
+	else if (mlx->_m.map[t->y][t->x] == '1')
 	{
-		if ((t->bloc_y + 1 == (t->y + 1) * mlx->_m.map_scale && (t->y
+        
+        if ((t->bloc_y + 1 == (t->y + 1) * mlx->_m.map_scale && (t->y
 					+ 1 < mlx->_m.map_height && mlx->_m.map[t->y
-					+ 1][t->x] != '1')) ||
+					+ 1][t->x] != '1' && mlx->_m.map[t->y + 1][t->x] != 'x')) ||
 			(t->bloc_x + 1 == (t->x + 1) * mlx->_m.map_scale && (t->x
 						+ 1 < mlx->_m.map_width
-						&& mlx->_m.map[t->y][t->x + 1] != '1')))
+						&& mlx->_m.map[t->y][t->x + 1] != '1' && mlx->_m.map[t->y][t->x + 1] != 'x')))
 			my_mlx_pixel_put(mlx, t->bloc_x, t->bloc_y, WHITE);
 		else
 			my_mlx_pixel_put(mlx, t->bloc_x, t->bloc_y, WALLCOLOR);
 	}
+    else if (mlx->_m.map[t->y][t->x] == 'x')
+			my_mlx_pixel_put(mlx, t->bloc_x, t->bloc_y, WALLCOLOR);
 }
 
 void iterate_map(t_mlx *mlx , t_bloc *t)

@@ -6,20 +6,42 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 16:27:23 by ebelkhei          #+#    #+#             */
-/*   Updated: 2023/03/26 20:37:23 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 00:47:51 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Cub3D.h"
 
-// the numbers must be << 255 && > 0
+int	create_trgb(unsigned char t, unsigned char r, unsigned char g, unsigned char b)
+{
+	return (*(int *)(unsigned char [4]){b, g, r, t});
+}
 
+void	set_player_cords(t_components *comp)
+{
+	int        i;
+    int        j;
 
-// keep reading until u found a null or a map line;
-// for the line that has been read:
-// if It's a newline, continue;
-// if not, split by space and check the first argument. If it's a valid argument, fill the required variables, if not, print an error and exit;
-// for the elements parse, check if there is only two args after spliting. Check if the second arg is valid.
+    i = 0;
+    while (comp->map[i])
+    {
+        j = 0;
+        while (comp->map[i][j])
+        {
+            if (comp->map[i][j] == 32)
+				comp->map[i][j] = 'x';
+			if (comp->map[i][j] == 'N' || comp->map[i][j] == 'W'
+				|| comp->map[i][j] == 'E' || comp->map[i][j] == 'S')
+            {
+				comp->player_x = j;
+				comp->player_y = i;
+				return ;
+			}
+            j++;
+        }
+        i++;
+    }
+}
 
 int	num_of_commas(char *str)
 {
@@ -48,17 +70,13 @@ int	arr_size(char **arr)
 	return (i);
 }
 
-int	parse_rgb(t_elements *elements, char *color, int a)
+int *parse_rgb_2(char **colors)
 {
 	int				i;
 	int				n;
-	char			**colors;
-	unsigned char	*rgb;
+	int				*rgb;
 
-	colors = ft_split(color, ',');
-	if (!colors || arr_size(colors) != 3 || num_of_commas(color) != 2)
-		return (0);
-	i = -1;
+	i = 0;
 	rgb = malloc(3 * sizeof(unsigned char));
 	while (colors[++i])
 	{
@@ -68,13 +86,30 @@ int	parse_rgb(t_elements *elements, char *color, int a)
 		else
 		{
 			ft_free_all_mfs(colors);
-			return (0);
+			return (NULL);
 		}
 	}
+	return (rgb);
+}
+
+int	parse_rgb(t_elements *elements, char *color, int a)
+{
+	int				i;
+	int				*rgb;
+	char			**colors;
+
+	colors = ft_split(color, ',');
+	if (!colors || arr_size(colors) != 3 || num_of_commas(color) != 2)
+		return (0);
+	i = -1;
+	rgb = parse_rgb_2(colors);
+	if (!rgb)
+		return (0);
 	if (a)
-		elements->c_color = rgb;
+		elements->c_color = create_trgb(0, rgb[0], rgb[1], rgb[2]);
 	else
-		elements->f_color = rgb;
+		elements->f_color = create_trgb(0, rgb[0], rgb[1], rgb[2]);
+	free(rgb);
 	ft_free_all_mfs(colors);
 	return (1);
 }
@@ -104,6 +139,25 @@ int	check(char **el, t_elements *elements)
 	else
 		return (!printf("Invalid element identifier\n"));
 	return (1);
+}
+
+int	is_dir(t_elements *elements)
+{
+	int	*fds;
+	int	i;
+
+	fds = malloc(4 * sizeof(int));
+	fds[0] = open(elements->e_texture, O_DIRECTORY);
+	fds[1] = open(elements->n_texture, O_DIRECTORY);
+	fds[2] = open(elements->s_texture, O_DIRECTORY);
+	fds[3] = open(elements->w_texture, O_DIRECTORY);
+	i = 4;
+	while (--i >= 0)
+	{
+		if (fds[i] != -1)
+			return (free(fds), 1);
+	}
+	return (free(fds), 0);
 }
 
 int	check_element(char *element, t_elements *elements)
@@ -148,9 +202,9 @@ int	read_file(char *arg, t_components *comp)
 		if (!line)
 			break ;
 	}
-	if (!line)
+	if (!line || is_dir(&comp->elements))
 		return (!printf("Invalid File\n"));
 	if (!read_map(scene_file, comp, line))
 		return (0);
-	return (check_map(comp->map));
+	return (check_map(comp->map, comp));
 }

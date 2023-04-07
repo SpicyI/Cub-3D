@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/05 20:21:10 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 01:10:34 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 int hit_wall(t_mlx *mlx, float x, float y)
 {
+	if (x / mlx->_m.map_scale < 0 || x / mlx->_m.map_scale > mlx->_m.map_width
+		|| y / mlx->_m.map_scale < 0 || y / mlx->_m.map_scale > mlx->_m.map_height)
+		return (1);
 	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == '1')
 			return (1);
 		return (0);
@@ -22,14 +25,13 @@ float get_distance(t_mlx *mlx, t_inter *r ,t_ray *ray, int side)
 {
 	float hit_distance;
 
-	
 	while (1)
 	{
 		if (r->x_inter < 0 || r->x_inter > mlx->_m.map_width * mlx->_m.map_scale
 			|| r->y_inter < 0 || r->y_inter > mlx->_m.map_height * mlx->_m.map_scale)
 			break ;
-		if (r->y_inter / mlx->_m.map_scale > mlx->_m.map_height
-			|| r->x_inter / mlx->_m.map_scale > mlx->_m.map_width)
+		if (r->y_inter / mlx->_m.map_scale >= mlx->_m.map_height
+			|| r->x_inter / mlx->_m.map_scale >= mlx->_m.map_width)
 			break ;
 		if (side == HORIZONTAL)
 		{
@@ -82,8 +84,8 @@ float horizontal_hit(t_mlx *mlx , t_ray * ray, t_inter *r)
 	if (r->xstep > 0 && !(ray->ray_angle < M_PI / 2 || ray->ray_angle > 1.5 * M_PI))
 		r->xstep *= -1;
 	r->x_inter = mlx->_p.player_x + ((r->y_inter - mlx->_p.player_y) / tan(ray->ray_angle));
-	// if (!(ray->ray_angle < M_PI && ray->ray_angle > 0))
-	// 	r->y_inter -= 1;
+	if (isnan(r->x_inter))
+		r->x_inter = 0;
 	hit_distance = get_distance(mlx, r, ray, HORIZONTAL);
 	return (hit_distance);
 }
@@ -107,9 +109,6 @@ float vertical_hit(t_mlx *mlx , t_ray *ray , t_inter *r)
 	if (r->ystep > 0 && !(ray->ray_angle < M_PI && ray->ray_angle > 0))
 		r->ystep *= -1;
 	r->y_inter = mlx->_p.player_y + ((r->x_inter - mlx->_p.player_x) * tan(ray->ray_angle));
-	
-	// if (!(ray->ray_angle < M_PI / 2 || ray->ray_angle > 1.5 * M_PI))
-	// 	r->x_inter -= 1;
 	hit_distance = get_distance(mlx, r, ray, VERTICAL);
 	return (hit_distance);
 }
@@ -121,6 +120,8 @@ float	cast(t_ray *ray, t_mlx *mlx)
 	float hor_distance;
 	t_inter r[2];
 
+	r[0].x_inter = 0;
+	r[0].y_inter = 0;
 	ver_distance = vertical_hit(mlx, ray , &r[0]);
 	hor_distance = horizontal_hit(mlx, ray ,&r[1]);
 	if (hor_distance < ver_distance)
@@ -146,7 +147,6 @@ void	init_ray(t_ray *ray, t_mlx *mlx)
 	ray->ray_angle = mlx->_p.player_angle - (mlx->fov / 2);
 	ray->max_angle = mlx->_p.player_angle + (mlx->fov / 2);
 	ray->rays_number = RAYNUMBER;
-	ray->scale_factor = SCALEFACTOR;
 	ray->step = mlx->fov / ray->rays_number;
 }
 
@@ -154,7 +154,7 @@ t_side	get_color(t_ray *ray, t_mlx *mlx )
 {
 	float floored_x;
 	float floored_y;
-	t_side info; // to store x of texture and which texture to use
+	t_side info;
 	
 	floored_x = floor(ray->hit_point[X] / mlx->_m.map_scale) * mlx->_m.map_scale;
 	floored_y = floor(ray->hit_point[Y] / mlx->_m.map_scale) * mlx->_m.map_scale;
@@ -168,14 +168,12 @@ t_side	get_color(t_ray *ray, t_mlx *mlx )
 	{
 		info.tex = SO;
 		info.x = ((ray->hit_point[X] - floored_x)/ mlx->_m.map_scale) *  mlx->_t[SO].width;
-		// invert texture
 		info.x = mlx->_t[SO].width - info.x  - 1;
 	}
 	if (ray->hit_point[X] - mlx->_p.player_x < 0 && ray->hit_side == VERTICAL)
 	{
 		info.tex = WE;
 		info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[WE].width;
-		// invert texture
 		info.x = mlx->_t[WE].width - info.x - 1;
 	}
 	if (ray->hit_point[X] - mlx->_p.player_x >= 0 && ray->hit_side == VERTICAL)
@@ -198,24 +196,6 @@ void	draw_ray(t_mlx *mlx, t_ray *ray)
 		my_mlx_pixel_put(mlx, ray->x , ray->y , 0x00FF0000);
 }
 
-// void drawline(t_mlx *mlx , float  ray_angle)
-// {
-// 	int		i;
-// 	t_ray	ray;
-
-// 	ray.ray_angle = ray_angle;
-// 	i = 0;
-// 	ray.x = (cos(ray.ray_angle) * i) + mlx->_p.player_x ;
-// 	ray.y = (sin(ray.ray_angle) * i) + mlx->_p.player_y;
-// 	while (1)
-// 	{
-// 		draw_ray(mlx, &ray);
-// 		if (hit_wall(mlx, &ray, i))
-// 			break ;
-// 		i++;
-// 	}
-// }
-
 void	ray_caster(t_mlx *mlx)
 {
 	t_ray	ray;
@@ -231,24 +211,19 @@ void	ray_caster(t_mlx *mlx)
 			if (ray.hit_point[X]  < mlx->_p.player_x
 				+ 100 && (ray.hit_point[Y]  < mlx->_p.player_y + 100))
 			{
-				my_mlx_pixel_put(mlx, ray.hit_point[X] , ray.hit_point[Y], 0x00FF0000);
-				my_mlx_pixel_put(mlx, ray.hit_point[X] - 1, ray.hit_point[Y] - 1, 0x00FF0000);
+				my_mlx_pixel_put(mlx, ray.hit_point[X] , ray.hit_point[Y], WHITE);
+				my_mlx_pixel_put(mlx, ray.hit_point[X] - 1, ray.hit_point[Y] - 1, 0x9D00FF);
+				my_mlx_pixel_put(mlx, ray.hit_point[X] + 1, ray.hit_point[Y] + 1, 0x9D00FF);
 			}
 		}
 	else
 	{
-			my_mlx_pixel_put(mlx, ray.hit_point[X], ray.hit_point[Y], 0x00FF0000);
-			my_mlx_pixel_put(mlx, ray.hit_point[X] - 1, ray.hit_point[Y] - 1, 0x00FF0000);
+			my_mlx_pixel_put(mlx, ray.hit_point[X], ray.hit_point[Y], WHITE);
+			my_mlx_pixel_put(mlx, ray.hit_point[X] - 1, ray.hit_point[Y] - 1, 0x9D00FF);
+			my_mlx_pixel_put(mlx, ray.hit_point[X] + 1, ray.hit_point[Y] + 1, 0x9D00FF);
 	}
 		mlx->_s[i] = get_color(&ray, mlx);
-		if (mlx->_s[i].tex > 3 || mlx->_s[i].tex < 0)
-			printf("x = %d , tex = %d", mlx->_s[i].x, mlx->_s[i].tex);
 		ray.ray_angle += ray.step;
 		i++;
 	}
-	// printf("north(%d, %d), ", mlx->_t.north.width, mlx->_t.north.height);
-	// printf("south(%d, %d), ", mlx->_t.south.width, mlx->_t.south.height);
-	// printf("east(%d, %d), ", mlx->_t.east.width, mlx->_t.east.height);
-	// printf("west(%d, %d)", mlx->_t.west.width, mlx->_t.west.height);
-	// exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/05 19:49:22 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/06 01:30:29 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	keys_pressed(int key, t_mlx *mlx)
 {
 	mlx->on_change = 1;
-	if (!mlx->img)
-		return (0);
+	// if (!mlx->img)
+	// 	return (0);
 	if (key == 53)
 		exit_game(mlx);
 	if (key == 48)
@@ -51,6 +51,12 @@ void	move_up(t_mlx *mlx, float step_x, float step_y)
 	player_y = mlx->_p.player_y / mlx->_m.map_scale;
 	jump_posx = (mlx->_p.player_x + step_x) / mlx->_m.map_scale;
 	jump_posy = (mlx->_p.player_y + step_y) / mlx->_m.map_scale;
+	
+	if (player_y < 0 || player_x < 0 || jump_posx < 0 || jump_posy < 0)
+		return ;
+	if (player_y > mlx->_m.map_height || player_x > mlx->_m.map_width
+		|| jump_posx > mlx->_m.map_width || jump_posy > mlx->_m.map_height)
+		return ;
 	if (mlx->_m.map[player_y][jump_posx] != '1')
 		mlx->_p.player_x += step_x;
 	if (mlx->_m.map[jump_posy][player_x] != '1')
@@ -69,6 +75,11 @@ void	move_down(t_mlx *mlx, float step_x, float step_y)
 	jump_posx = (mlx->_p.player_x - step_x) / mlx->_m.map_scale;
 	jump_posy = (mlx->_p.player_y - step_y) / mlx->_m.map_scale;
 
+	if (player_y < 0 || player_x < 0 || jump_posx < 0 || jump_posy < 0)
+		return ;
+	if (player_y > mlx->_m.map_height || player_x > mlx->_m.map_width
+		|| jump_posx > mlx->_m.map_width || jump_posy > mlx->_m.map_height)
+		return ;
 	if (mlx->_m.map[player_y][jump_posx] != '1')
 		mlx->_p.player_x -= step_x;
 	if (mlx->_m.map[jump_posy][player_x] != '1')
@@ -133,7 +144,7 @@ void	update(t_mlx *mlx)
 	update_minimap(mlx);
 }
 
-int	plane_controls2(int key, t_mlx *mlx)
+int	key_released(int key, t_mlx *mlx)
 {
 	if (key == 123)
 		mlx->control_keys[LEFT_ARROW] = RELEASED;

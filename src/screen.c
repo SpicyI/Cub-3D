@@ -6,12 +6,36 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/05 20:25:17 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/06 18:32:02 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../Cub3D.h"
 
+// int shader(int color, int shade_percentage)
+// {
+//     // Extract the red, green, and blue components of the input color.
+//     unsigned char red = (color >> 16) & 0xFF;
+//     unsigned char green = (color >> 8) & 0xFF;
+//     unsigned char blue = color & 0xFF;
+
+// 	if (shade_percentage < 0)
+// 		shade_percentage *= -1;
+//     // Apply the shade percentage to each color component.
+// 	if (shade_percentage > 100)
+// 		shade_percentage = 100;
+//     red = (unsigned char)(red * shade_percentage / 100);
+//     green = (unsigned char)(green * shade_percentage / 100);
+//     blue = (unsigned char)(blue * shade_percentage / 100);
+
+//     // Ensure that the modified color components are within the valid range of 0 to 255.
+//     red = (red > 255) ? 255 : red;
+//     green = (green > 255) ? 255 : green;
+//     blue = (blue > 255) ? 255 : blue;
+
+//     // Combine the modified color components into a single integer and return it.
+//     return (red << 16) | (green << 8) | blue;
+// }
 int	shader(int color, int shad_percentage)
 {
 	unsigned char	full_transparency;
@@ -35,7 +59,7 @@ void	putWalls(t_mlx *mlx)
 	int		y;
 	int		i;
 	int		wallHeight;
-	// int 	offset;
+	int 	offset;
 	int 	color;
 	t_mlx	tmp;
 
@@ -50,30 +74,15 @@ void	putWalls(t_mlx *mlx)
 	{
 		// calculate the wall height
 		wallHeight = (mlx->_m.map_scale / mlx->distances[x]) * mlx->sreen_dist;
-		// if (wallHeight >= SCREEN_HEIGHT)
-		// {
-		// 	wallHeight = SCREEN_HEIGHT;
-		// 	// x++;
-		// 	// continue;
-		// }
-		i = 0;
 		// offset the middle of the screen
-		// offset = (SCREEN_HEIGHT / 2) + mlx->_mo.y_offset;
-		// if (offset < 0)
-		// 	offset = 200;
-
-		y = (SCREEN_HEIGHT / 2) - (wallHeight / 2);
-		// if (y < 0)
-		// {
-		// 	// wallHeight += y;
-		// 	y = 0;
-		// }
+		offset = (SCREEN_HEIGHT / 2) + mlx->_mo.y_offset;
+		y = offset - (wallHeight / 2);
 		if(y > SCREEN_HEIGHT)
 			y = SCREEN_HEIGHT;
 		// draw the wall strip
+		i = 0 - y;
 		while (i < wallHeight && y + i < SCREEN_HEIGHT)
 		{
-			
 			if (y + i < 0)
 			{
 				i++;
@@ -82,21 +91,23 @@ void	putWalls(t_mlx *mlx)
 			color = get_img_color(&(mlx->_t[mlx->_s[x].tex]), mlx->_s[x].x, i * mlx->_t[mlx->_s[x].tex].height / wallHeight);
 			my_mlx_pixel_put(&tmp, x, y + i, shader(color, wallHeight * 400
 						/ SCREEN_HEIGHT));
-			// my_mlx_pixel_put(&tmp, x, y + i, get_img_color(&(mlx->_t[mlx->_s[x].tex]),mlx->_s[x].x, i * mlx->_t[mlx->_s[x].tex].height / wallHeight));
+			i++;
+		}
+		while (y + i < SCREEN_HEIGHT)
+		{
+			if (y + i < 0)
+			{
+				i++;
+				continue;
+			}
+			my_mlx_pixel_put(&tmp, x, y + i, shader(GROUNDCOLOR, (i) * 100 / (SCREEN_HEIGHT/ 2)));
 			i++;
 		}
 		i = 0;
 		// draw the ceiling
-		while (i < y)
+		while (i < y && i < SCREEN_HEIGHT)
 		{
-			my_mlx_pixel_put(&tmp, x, i, shader(SKYCOLOR, (0 - i) * 100 / SCREEN_HEIGHT));
-			i++;
-		}
-		// draw the floor
-		i += wallHeight ;
-		while (i < SCREEN_HEIGHT)
-		{
-			my_mlx_pixel_put(&tmp, x, i, shader(GROUNDCOLOR, i * 100 / SCREEN_HEIGHT));
+			my_mlx_pixel_put(&tmp, x, i, shader(SKYCOLOR, 100 - ((i / y) * 100)));
 			i++;
 		}
 		x++;
