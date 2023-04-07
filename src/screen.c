@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 05:51:42 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 06:50:24 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,9 @@ void	putWalls(t_mlx *mlx)
 			y = offset - (door_height / 2);
 			if(y > SCREEN_HEIGHT)
 				y = SCREEN_HEIGHT;
-			i = 0 - y;
+			i = 0;
+			if (y + i < 0)
+				i = 0 - y;
 			while (i < door_height && y + i < SCREEN_HEIGHT)
 			{
 				if (y + i < 0)
@@ -138,6 +140,9 @@ void	putWalls(t_mlx *mlx)
 					i++;
 					continue;
 				}
+				if (i < (door_height * 0.05))
+					my_mlx_pixel_put(&tmp, x, y + i, METAL);
+				else
 				my_mlx_pixel_put(&tmp, x, y + i, mlx->_d[x].door_color);
 				i++;
 			}

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 05:52:18 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 21:10:11 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int hit_wall(t_mlx *mlx, float x, float y, t_inter *r)
 			if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'D')
 				r->doorcolor = 0xBBFF0000;
 			else if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'O')
-				r->doorcolor = 0xBB00FF00;
+				r->doorcolor = 0xBB007FFF;
 			my_mlx_pixel_put(mlx, x, y, 0x0000FF00);
 		}
 	};

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 05:09:41 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/07 06:48:47 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@
 # define SKYCOLOR 0x003E2F84
 # define GROUNDCOLOR  0x009370DB
 # define WHITE 0x00FFFFFF
-# define METAL 0x00a1a4a3
+# define METAL 0x00232322
 // logic
 # define TRUE 1
 # define FALSE 0
