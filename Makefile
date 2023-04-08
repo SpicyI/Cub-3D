@@ -25,7 +25,6 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 	$(OBJ_DIR)
 	$(CC) $(CFLAGS)   -o $@ -c $<
 
-
 .PHONY: clean
 clean: 
 	$(RM) $(DELOBJ) $(OBJDIR)

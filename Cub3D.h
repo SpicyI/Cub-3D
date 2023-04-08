@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 06:48:47 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/08 05:05:04 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define GROUNDCOLOR  0x009370DB
 # define WHITE 0x00FFFFFF
 # define METAL 0x00232322
+# define PURPLE 0x9D00FF
 // logic
 # define TRUE 1
 # define FALSE 0
@@ -59,6 +60,8 @@
 # define Y 1
 # define VERTICAL 0
 # define HORIZONTAL 1
+# define VER 0
+# define HOR 1
 # define PRESSED 1
 # define RELEASED 0
 // texture data
@@ -169,6 +172,7 @@ typedef struct s_ray
 	int				hit_side;
 	float 			x;
 	float 			y;
+	float 			dist;
 }					t_ray;
 
 // map data
@@ -196,7 +200,6 @@ typedef struct s_player
 
 	void			*player_img;
 	void			*icon_img;
-	void			*gun_img;
 }					t_player;
 
 
@@ -258,6 +261,10 @@ void	initialize_comps(t_components *comp);
 int	check_comps(t_components *comp);
 void print_data(t_components *comp);
 void	set_player_cords(t_components *comp);
+char	*ft_strjoin(char *dst, char *src);
+char	*ft_itoa(int n);
+char	*ft_strdup(const char *s);
+
 /*                  mlxTools         */
 void				exit_game(t_mlx *mlx);
 void				my_mlx_pixel_put(t_mlx *data, int x, int y, int color);
@@ -265,25 +272,59 @@ int					render(t_mlx *mlx);
 
 /*                control           */
 int					keys_pressed(int key, t_mlx *mlx);
-void				update(t_mlx *mlx);
 
 /*                2d rendring           */
-void				transparent_Bg(t_mlx *mlx, int img_width, int img_height);
-void				drawMap(t_mlx *mlx);
-void				putPlayer(t_mlx *mlx);
+void				draw_map(t_mlx *mlx);
+void				put_player(t_mlx *mlx);
 void				ray_caster(t_mlx *mlx);
-void				update_minimap(t_mlx *mlx);
 
 /*             3d rendring*/
 void				putWalls(t_mlx *mlx);
 int					shader(int color, int shad_percentage);
 int					key_released(int key, t_mlx *mlx);
 
-/*                tools   */
-int					min(int a, int b);
-void				putPlayer(t_mlx *mlx);
+
+/*				inits				 */
+void init_map(t_mlx *mlx, t_components *comp);
+void init_player(t_mlx *mlx, t_components *comp);
+void	init_gun(t_mlx *mlx);
+void	init_data(t_mlx *mlx, t_components *comp);
+void init_loadscreen(t_mlx *mlx);
+void init_texture(t_mlx *mlx, t_components *comp);
+
+/*				animation			*/
+void	*framer(void *p);
+void	*gun_framer(void *p);
+
+/*				mouse				*/
 int     mlx_mouse_hide();
 int     mlx_mouse_show();
 int     mlx_mouse_move();
-int		get_img_color(t_data *data, int x, int y);
+int		mouse_click(int button, int x, int y, t_mlx *mlx);
+int	mouse_controls(int x, int y, t_mlx *mlx);
+
+/*				keyboard			*/
+int	key_released(int key, t_mlx *mlx);
+int	keys_pressed(int key, t_mlx *mlx);
+void	key_stroke(t_mlx *mlx, float step_x, float step_y);
+void	arrows(t_mlx *mlx, float step_x, float step_y);
+void	move_down(t_mlx *mlx, float step_x, float step_y);
+void	move_up(t_mlx *mlx, float step_x, float step_y);
+
+/*            update      */
+void				update_minimap(t_mlx *mlx);
+void				update(t_mlx *mlx);
+void				open_door(t_mlx *mlx);
+
+/*             cast      */
+float	cast(t_ray *ray, t_mlx *mlx, int i);
+float	get_distance(t_mlx *mlx, t_inter *r, t_ray *ray, int side);
+
+/*                tools   */
+t_inter	rmin(t_inter r1, t_inter r2);
+int					min(int a, int b);
+void				put_player(t_mlx *mlx);
+int					get_img_color(t_data *data, int x, int y);
+void				crop_img(t_mlx *mlx, int x, int y);
+void				transparent_bg(t_mlx *mlx, int img_width, int img_height);
 #endif

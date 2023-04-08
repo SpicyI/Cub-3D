@@ -6,200 +6,11 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:47 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 21:10:11 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/08 04:44:02 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Cub3D.h"
-
-int hit_wall(t_mlx *mlx, float x, float y, t_inter *r)
-{
-	if (x / mlx->_m.map_scale < 0 || x / mlx->_m.map_scale > mlx->_m.map_width
-		|| y / mlx->_m.map_scale < 0 || y / mlx->_m.map_scale > mlx->_m.map_height)
-		return (1);
-	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'D' ||
-		mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'O')
-	{
-		if (!r->hit_door)
-		{
-			r->door_x = x;
-			r->door_y = y;
-			r->door_dest = sqrt(pow(mlx->_p.player_x - r->door_x, 2) + pow(mlx->_p.player_y - r->door_y, 2));
-			r->hit_door = 1;
-			if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'D')
-				r->doorcolor = 0xBBFF0000;
-			else if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == 'O')
-				r->doorcolor = 0xBB007FFF;
-			my_mlx_pixel_put(mlx, x, y, 0x0000FF00);
-		}
-	};
-	if (mlx->_m.map[(int)(y / mlx->_m.map_scale)][(int)(x / mlx->_m.map_scale)] == '1')
-			return (1);
-	return (0);
-}
-float get_distance(t_mlx *mlx, t_inter *r ,t_ray *ray, int side)
-{
-	float hit_distance;
-
-	while (1)
-	{
-		if (r->x_inter < 0 || r->x_inter > mlx->_m.map_width * mlx->_m.map_scale
-			|| r->y_inter < 0 || r->y_inter > mlx->_m.map_height * mlx->_m.map_scale)
-			break ;
-		if (r->y_inter / mlx->_m.map_scale >= mlx->_m.map_height
-			|| r->x_inter / mlx->_m.map_scale >= mlx->_m.map_width)
-			break ;
-		if (side == HORIZONTAL)
-		{
-				if (!(ray->ray_angle < M_PI && ray->ray_angle > 0))
-				{
-					if(hit_wall(mlx, r->x_inter, r->y_inter - 1, r))
-						break ;
-				}
-				else
-				{
-					if(hit_wall(mlx, r->x_inter, r->y_inter, r))
-						break ;
-				}
-		}
-		if (side == VERTICAL)
-		{
-			if (!(ray->ray_angle < M_PI / 2 || ray->ray_angle > 1.5 * M_PI))
-			{
-				if(hit_wall(mlx, r->x_inter - 1, r->y_inter, r))
-					break ;
-			}
-			else
-			{
-				if(hit_wall(mlx, r->x_inter, r->y_inter, r))
-					break ;
-			}
-		}
-		r->x_inter += r->xstep;
-		r->y_inter += r->ystep;
-	}
-	r->hit_x = r->x_inter;
-	r->hit_y = r->y_inter;
-	hit_distance = sqrt(pow(mlx->_p.player_x - r->x_inter, 2) + pow(mlx->_p.player_y - r->y_inter, 2));
-	return (hit_distance);
-}
-
-float horizontal_hit(t_mlx *mlx , t_ray * ray, t_inter *r)
-{	
-	float   hit_distance;
-	
-	r->ystep = mlx->_m.map_scale;
-	r->xstep = mlx->_m.map_scale / tan(ray->ray_angle);
-	r->y_inter = floor(mlx->_p.player_y / mlx->_m.map_scale) * mlx->_m.map_scale;
-	if (ray->ray_angle < M_PI && ray->ray_angle > 0)
-		r->y_inter += mlx->_m.map_scale; 
-	else 
-		r->ystep *= -1;
-	if (r->xstep < 0 && (ray->ray_angle < M_PI / 2 || ray->ray_angle > 1.5 * M_PI))
-		r->xstep *= -1;
-	if (r->xstep > 0 && !(ray->ray_angle < M_PI / 2 || ray->ray_angle > 1.5 * M_PI))
-		r->xstep *= -1;
-	r->x_inter = mlx->_p.player_x + ((r->y_inter - mlx->_p.player_y) / tan(ray->ray_angle));
-	if (isnan(r->x_inter))
-		r->x_inter = 0;
-	hit_distance = get_distance(mlx, r, ray, HORIZONTAL);
-	if (!r->hit_door)
-		r->door_dest = hit_distance;
-	return (hit_distance);
-}
-
-float vertical_hit(t_mlx *mlx , t_ray *ray , t_inter *r)
-{
-	float   hit_distance;
-	
-	ray->ray_angle = remainder(ray->ray_angle ,(2 * M_PI));
-	if (ray->ray_angle < 0)
-		ray->ray_angle += (2 * M_PI);
-	r->xstep = mlx->_m.map_scale;
-	r->ystep = mlx->_m.map_scale * tan(ray->ray_angle);
-	r->x_inter = floor(mlx->_p.player_x / mlx->_m.map_scale) * mlx->_m.map_scale;
-	if ((ray->ray_angle < M_PI / 2 || ray->ray_angle > 1.5 * M_PI)) // facing right
-		r->x_inter += mlx->_m.map_scale; 
-	else 
-		r->xstep *= -1;
-	if (r->ystep < 0 && (ray->ray_angle < M_PI && ray->ray_angle > 0))
-		r->ystep *= -1;
-	if (r->ystep > 0 && !(ray->ray_angle < M_PI && ray->ray_angle > 0))
-		r->ystep *= -1;
-	r->y_inter = mlx->_p.player_y + ((r->x_inter - mlx->_p.player_x) * tan(ray->ray_angle));
-	hit_distance = get_distance(mlx, r, ray, VERTICAL);
-	if (!r->hit_door)
-		r->door_dest = hit_distance;
-	return (hit_distance);
-}
-
-float	cast(t_ray *ray, t_mlx *mlx, int i)
-{
-	float	distance_to_wall;
-	float ver_distance;
-	float hor_distance;
-	t_inter r[2];
-
-	r[0].x_inter = 0;
-	r[0].y_inter = 0;
-	r[0].hit_door = 0;
-	r[1].hit_door = 0;
-	ver_distance = vertical_hit(mlx, ray , &r[0]);
-	hor_distance = horizontal_hit(mlx, ray ,&r[1]);
-	if (hor_distance < ver_distance)
-	{
-		ray->hit_side = HORIZONTAL;
-		distance_to_wall = hor_distance;
-		ray->hit_point[X] = r[1].hit_x;
-		ray->hit_point[Y] = r[1].hit_y;
-	}
-	else
-	{
-		ray->hit_side = VERTICAL;
-		distance_to_wall = ver_distance;
-		ray->hit_point[X] = r[0].hit_x;
-		ray->hit_point[Y] = r[0].hit_y;
-	}
-	distance_to_wall *= cos(mlx->_p.player_angle - ray->ray_angle);
-	if (r[0].hit_door && r[1].hit_door)
-	{
-		if (r[0].door_dest < r[1].door_dest)
-		{
-			mlx->_d[i].door_dist = r[0].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
-			mlx->_d[i].door_color = r[0].doorcolor;
-		}
-		else
-		{
-			mlx->_d[i].door_dist = r[1].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
-			mlx->_d[i].door_color = r[1].doorcolor;
-		}
-		if (mlx->_d[i].door_dist < distance_to_wall)
-			mlx->_d[i].door_exist = 1;
-		else
-			mlx->_d[i].door_exist = 0;
-	}
-	else if (r[0].hit_door && !r[1].hit_door)
-	{
-		mlx->_d[i].door_dist = r[0].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
-		mlx->_d[i].door_color = r[0].doorcolor;
-		if (mlx->_d[i].door_dist < distance_to_wall)
-			mlx->_d[i].door_exist = 1;
-		else
-			mlx->_d[i].door_exist = 0;;
-	}
-	else if (!r[0].hit_door && r[1].hit_door)
-	{
-		mlx->_d[i].door_dist = r[1].door_dest * cos(mlx->_p.player_angle - ray->ray_angle);
-		mlx->_d[i].door_color = r[1].doorcolor;
-		if (mlx->_d[i].door_dist < distance_to_wall)
-			mlx->_d[i].door_exist = 1;
-		else
-			mlx->_d[i].door_exist = 0;
-	}
-	else
-		mlx->_d[i].door_exist = 0;
-	return (distance_to_wall);
-}
 
 void	init_ray(t_ray *ray, t_mlx *mlx)
 {
@@ -209,88 +20,71 @@ void	init_ray(t_ray *ray, t_mlx *mlx)
 	ray->step = mlx->fov / ray->rays_number;
 }
 
-t_side	get_color(t_ray *ray, t_mlx *mlx )
+t_side	set_side(float *p, float *floored_p, t_ray *ray, t_mlx *m)
 {
-	float floored_x;
-	float floored_y;
-	int x; // for the door
-	int y; // for the door
-	t_side info;
-	
-	floored_x = floor(ray->hit_point[X] / mlx->_m.map_scale) * mlx->_m.map_scale;
-	floored_y = floor(ray->hit_point[Y] / mlx->_m.map_scale) * mlx->_m.map_scale;
-	x = ray->hit_point[X] / mlx->_m.map_scale;
-	y = ray->hit_point[Y] / mlx->_m.map_scale;
-	info.x = 0;
-	if (ray->hit_point[Y] - mlx->_p.player_y < 0 && ray->hit_side == HORIZONTAL)
+	t_side	info;
+
+	if (p[Y] - m->_p.player_y < 0 && ray->hit_side == HOR)
 	{
-		if (mlx->_m.map[y - 1][x] == 'D')
-		{
-			info.tex = DR;
-			info.x = ((ray->hit_point[X] - floored_x)  / mlx->_m.map_scale) * mlx->_t[DR].width;
-		}
-		else
-		{
-			info.tex = NO;
-			info.x = ((ray->hit_point[X] - floored_x)  / mlx->_m.map_scale) * mlx->_t[NO].width;
-		}
+		info.tex = NO;
+		info.x = ((p[X] - floored_p[X]) / m->_m.map_scale) * m->_t[NO].width;
 	}
-	if (ray->hit_point[Y] - mlx->_p.player_y >= 0 && ray->hit_side == HORIZONTAL)
+	if (p[Y] - m->_p.player_y >= 0 && ray->hit_side == HOR)
 	{
-		if (mlx->_m.map[y][x] == 'D')
-		{
-			info.tex = DR;
-			info.x = ((ray->hit_point[X] - floored_x)/ mlx->_m.map_scale) *  mlx->_t[DR].width;
-			info.x = mlx->_t[DR].width - info.x  - 1;
-		}
-		else
-		{
-			info.tex = SO;
-			info.x = ((ray->hit_point[X] - floored_x)/ mlx->_m.map_scale) *  mlx->_t[SO].width;
-			info.x = mlx->_t[SO].width - info.x  - 1;
-		}
+		info.tex = SO;
+		info.x = ((p[X] - floored_p[X]) / m->_m.map_scale) * m->_t[SO].width;
+		info.x = m->_t[SO].width - info.x - 1;
 	}
-	if (ray->hit_point[X] - mlx->_p.player_x < 0 && ray->hit_side == VERTICAL)
+	if (p[X] - m->_p.player_x < 0 && ray->hit_side == VER)
 	{
-		if (mlx->_m.map[y][x - 1] == 'D')
-		{
-			info.tex = DR;
-			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[DR].width;
-			info.x = mlx->_t[DR].width - info.x - 1;
-		}
-		else
-		{
-			info.tex = WE;
-			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[WE].width;
-			info.x = mlx->_t[WE].width - info.x - 1;
-		}
+		info.tex = WE;
+		info.x = ((p[Y] - floored_p[Y]) / m->_m.map_scale) * m->_t[WE].width;
+		info.x = m->_t[WE].width - info.x - 1;
 	}
-	if (ray->hit_point[X] - mlx->_p.player_x >= 0 && ray->hit_side == VERTICAL)
+	if (p[X] - m->_p.player_x >= 0 && ray->hit_side == VER)
 	{
-		if (mlx->_m.map[y][x] == 'D')
-		{
-			info.tex = DR;
-			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[DR].width;
-		}
-		else
-		{
-			info.tex = EA;
-			info.x = ((ray->hit_point[Y] - floored_y)  / mlx->_m.map_scale) *  mlx->_t[EA].width;
-		}
+		info.tex = EA;
+		info.x = ((p[Y] - floored_p[Y]) / m->_m.map_scale) * m->_t[EA].width;
 	}
 	return (info);
 }
 
-void	draw_ray(t_mlx *mlx, t_ray *ray)
+t_side	get_color(t_ray *ray, t_mlx *mlx)
 {
+	float	floored_p[2];
+	float	p[2];
+	t_side	info;
+
+	p[X] = ray->hit_point[X];
+	p[Y] = ray->hit_point[Y];
+	floored_p[X] = floor(p[X] / mlx->_m.map_scale) * mlx->_m.map_scale;
+	floored_p[Y] = floor(p[Y] / mlx->_m.map_scale) * mlx->_m.map_scale;
+	info = set_side(p, floored_p, ray, mlx);
+	return (info);
+}
+
+void	highlight_hit_point(t_mlx *mlx, t_ray *ray)
+{
+	int	x;
+	int	y;
+
+	x = ray->hit_point[X];
+	y = ray->hit_point[Y];
 	if (mlx->_m.display_map > 0)
 	{
-		if (ray->x  < mlx->_p.player_x
-			+ 100 && (ray->y  < mlx->_p.player_y + 100))
-			my_mlx_pixel_put(mlx, ray->x , ray->y, 0x00FF0000);
+		if (x < mlx->_p.player_x + 100 && (y < mlx->_p.player_y + 100))
+		{
+			my_mlx_pixel_put(mlx, x, y, WHITE);
+			my_mlx_pixel_put(mlx, x - 1, y - 1, PURPLE);
+			my_mlx_pixel_put(mlx, x + 1, y + 1, PURPLE);
+		}
 	}
 	else
-		my_mlx_pixel_put(mlx, ray->x , ray->y , 0x00FF0000);
+	{
+		my_mlx_pixel_put(mlx, x, y, WHITE);
+		my_mlx_pixel_put(mlx, x - 1, y - 1, PURPLE);
+		my_mlx_pixel_put(mlx, x + 1, y + 1, PURPLE);
+	}
 }
 
 void	ray_caster(t_mlx *mlx)
@@ -300,25 +94,10 @@ void	ray_caster(t_mlx *mlx)
 
 	init_ray(&ray, mlx);
 	i = 0;
-	while (i  < ray.rays_number)
+	while (i < ray.rays_number)
 	{
 		mlx->distances[i] = cast(&ray, mlx, i);
-		if (mlx->_m.display_map > 0)
-		{
-			if (ray.hit_point[X]  < mlx->_p.player_x
-				+ 100 && (ray.hit_point[Y]  < mlx->_p.player_y + 100))
-			{
-				my_mlx_pixel_put(mlx, ray.hit_point[X] , ray.hit_point[Y], WHITE);
-				my_mlx_pixel_put(mlx, ray.hit_point[X] - 1, ray.hit_point[Y] - 1, 0x9D00FF);
-				my_mlx_pixel_put(mlx, ray.hit_point[X] + 1, ray.hit_point[Y] + 1, 0x9D00FF);
-			}
-		}
-	else
-	{
-			my_mlx_pixel_put(mlx, ray.hit_point[X], ray.hit_point[Y], WHITE);
-			my_mlx_pixel_put(mlx, ray.hit_point[X] - 1, ray.hit_point[Y] - 1, 0x9D00FF);
-			my_mlx_pixel_put(mlx, ray.hit_point[X] + 1, ray.hit_point[Y] + 1, 0x9D00FF);
-	}
+		highlight_hit_point(mlx, &ray);
 		mlx->_s[i] = get_color(&ray, mlx);
 		ray.ray_angle += ray.step;
 		i++;
