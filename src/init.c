@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:21:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 05:01:29 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/08 06:11:56 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	init_data(t_mlx *mlx, t_components *comp)
 	init_gun(mlx);
 	mlx->distances = malloc(sizeof(float) * RAYNUMBER);
 	mlx->_d = calloc(RAYNUMBER, sizeof(t_door));
+	mlx->_sp = calloc(RAYNUMBER, sizeof(t_sprite));
 	mlx->fov = 60 * (M_PI / 180);
 	mlx->sreen_dist = (SCREEN_WIDTH / 2) / tan(mlx->fov / 2);
 	mlx->mouse = 0;

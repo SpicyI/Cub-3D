@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 05:13:27 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 00:22:48 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	shader(int color, int shad_percentage)
 	return (full_transparency << 24 | red << 16 | green << 8 | blue);
 }
 
-void	putWalls(t_mlx *mlx)
+void draw_scene(t_mlx *mlx)
 {
 	int		x;
 	int		y;
@@ -91,12 +91,29 @@ void	putWalls(t_mlx *mlx)
 	}
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, tmp.img, 0, 0);
 	mlx_destroy_image(mlx->p_mlx, tmp.img);
+}
+
+void	putWalls(t_mlx *mlx)
+{
+	int		x;
+	int		y;
+	int		i;
+	int 	offset;
+	int 	s_id = 0;
+	t_mlx	tmp;
+
+	x = 0;
+	y = 0;
+	i = 0;
+	
+	draw_scene(mlx);
+	offset = (SCREEN_HEIGHT / 2) + mlx->_mo.y_offset;
 	tmp.img = mlx_new_image(mlx->p_mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	tmp.addr = mlx_get_data_addr(tmp.img, &tmp.bits_per_pixel, &tmp.line_length,
 			&mlx->endian);
-	// transparent_bg(&tmp, SCREEN_WIDTH, SCREEN_HEIGHT);
-	x = 0;
-	y = 0;
+	int j = 0;
+	int x_ratio;
+	int y_ratio;
 	int door_height;
 	while (x < SCREEN_WIDTH)
 	{
@@ -136,7 +153,46 @@ void	putWalls(t_mlx *mlx)
 				i++;
 			}
 		}
-		else 
+		if(mlx->_sp[x].sprite_exist)
+		{
+			int sprite_height = (mlx->_m.map_scale / mlx->_sp[x].sprite_dist) * mlx->sreen_dist;
+			y = offset - (sprite_height / 2);
+			i = 0;
+			if (y + i < 0)
+				i = 0 - y;
+			int  r = 0;
+			while (r < y +i )
+			{
+				my_mlx_pixel_put(&tmp, x, r, TRANSPARENT);
+				r++;
+			}
+			if (mlx->_sp[x].sp_id != s_id)
+			{
+				s_id = mlx->_sp[x].sp_id;
+				j = 0;
+			}
+			while (i < sprite_height && y + i < SCREEN_HEIGHT)
+			{
+				if (y + i < 0)
+				{
+					i++;
+					continue;
+				}
+				x_ratio = j * mlx->sp_img.width / sprite_height;
+				y_ratio = i * mlx->sp_img.height / sprite_height;
+				int scolor = get_img_color(&(mlx->sp_img),x_ratio, y_ratio);
+				//scolor = shader(scolor, 50);
+				my_mlx_pixel_put(&tmp, x, y + i, scolor);
+				i++;
+			}
+			while (y + i < SCREEN_HEIGHT)
+			{
+				my_mlx_pixel_put(&tmp, x, y + i, TRANSPARENT);
+				i++;
+			}
+			j++;
+		}
+		if (!mlx->_sp[x].sprite_exist && !mlx->_d[x].door_exist)
 		{
 			i = 0;
 			while (i < SCREEN_HEIGHT)
@@ -144,12 +200,10 @@ void	putWalls(t_mlx *mlx)
 				my_mlx_pixel_put(&tmp, x, i, TRANSPARENT);
 				i++;
 			}
+			j = 0;
 		}
 		x++;
 	}
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, tmp.img, 0, 0);
 	mlx_destroy_image(mlx->p_mlx, tmp.img);
-
-	
-	// mlx->_mo.y_offset = 0;
 }

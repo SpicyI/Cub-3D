@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:20:38 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 01:05:09 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/08 21:18:30 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,15 @@ void	init_texture(t_mlx *mlx, t_components *comp)
 	i = -1;
 	mlx->_t = malloc(sizeof(t_data) * 5);
 	mlx->_s = malloc(sizeof(t_side) * RAYNUMBER);
+	
+	/*     sprite test*/
+	mlx->sp_img.img = mlx_xpm_file_to_image(mlx->p_mlx,
+			"testxpm/holo.xpm", &mlx->sp_img.width, &mlx->sp_img.height);
+	mlx->sp_img.addr = mlx_get_data_addr(mlx->sp_img.img,
+			&mlx->sp_img.bits_per_pixel, &mlx->sp_img.line_length,
+			&mlx->sp_img.endian);
+	/*      -------         */
+	
 	mlx->_t[NO].img = mlx_xpm_file_to_image(mlx->p_mlx,
 			comp->elements.n_texture, &mlx->_t[NO].width, &mlx->_t[NO].height);
 	mlx->_t[SO].img = mlx_xpm_file_to_image(mlx->p_mlx,

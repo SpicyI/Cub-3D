@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 05:05:04 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 00:20:27 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,15 @@ typedef struct s_door
 	int 	door_color;
 }				t_door;
 
+typedef struct s_sprite
+{
+	int		sprite_exist;
+	float   sprite_dist;
+	int 	sprite_color;
+	int 	sp_id;
+	int 	sp_hitpt[2];
+}				t_sprite;
+
 typedef struct s_inter
 {
 	float x_inter;
@@ -119,9 +128,14 @@ typedef struct s_inter
 	float hit_y;
 	float door_x;
 	float door_y;
+	float sprite_x;
+	float sprite_y;
 	int  hit_door;
+	int hit_sprite;
 	float door_dest;
-	int  doorcolor; 
+	float sprite_dist;
+	int  doorcolor;
+	int sp_hitpt[2];
 }		t_inter;
 
 typedef struct s_mouse
@@ -219,6 +233,7 @@ typedef struct s_mlx
 	float			*distances;
 	t_side				*_s;
 	t_data			*_t;
+	t_sprite		*_sp;
 	int				on_change;
 	int				control_keys[8];
 	float			fov;
@@ -232,6 +247,8 @@ typedef struct s_mlx
 	pthread_t		thread;
 	t_mouse			_mo;
 	t_door			*_d;
+	t_data			sp_img;
+	int 			ident;
 }					t_mlx;
 
 /*           parcing        */
@@ -319,6 +336,11 @@ void				open_door(t_mlx *mlx);
 /*             cast      */
 float	cast(t_ray *ray, t_mlx *mlx, int i);
 float	get_distance(t_mlx *mlx, t_inter *r, t_ray *ray, int side);
+
+/*				sprite		*/
+void check_sprite(t_mlx *mlx, t_inter *r, float x, float y);
+void sprite_detection(t_mlx *mlx, t_inter *r, t_ray *ray, int i);
+t_inter	smin(t_inter r1, t_inter r2);
 
 /*                tools   */
 t_inter	rmin(t_inter r1, t_inter r2);

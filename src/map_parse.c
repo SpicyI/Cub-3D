@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:03:31 by ebelkhei          #+#    #+#             */
-/*   Updated: 2023/04/07 00:02:05 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/08 18:24:28 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ int check_map(char **map, t_components *comp)
 					return (!printf("Too many players\n"));
 				player = 1;
 			}
-			else if (map[i][j] != '1' && map[i][j] != '0' && map[i][j] != ' ' && map[i][j] != 'D')
+			else if (map[i][j] != '1' && map[i][j] != '0' && map[i][j] != ' ' && map[i][j] != 'D' && map[i][j] != 'F')
 				return (!printf("Invalid character in map \n"));
 			j++;
 		}

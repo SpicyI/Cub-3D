@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 05:05:04 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 00:21:01 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	get_img_color(t_data *data, int x, int y)
 	char	*dst;
 
 	if (x < 0 || x >= data->width || y < 0 || y >= data->height)
-		return (0);
+		return (TRANSPARENT);
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	return (*(unsigned int *)dst);
 }
@@ -44,7 +44,9 @@ void	reset(t_mlx *mlx)
 {
 	mlx->mouse = 0;
 	mlx->_mo.mouse_angle = 0;
+	mlx->ident = 0;
 	bzero(mlx->_d, sizeof(t_door) * RAYNUMBER);
+	bzero(mlx->_sp, sizeof(t_sprite) * RAYNUMBER);
 }
 
 int	render(t_mlx *mlx)

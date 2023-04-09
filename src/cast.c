@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 04:39:44 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 04:39:51 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/08 18:21:41 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,19 @@ void	init_inter(t_inter *r)
 	r[0].y_inter = 0;
 	r[0].hit_door = 0;
 	r[1].hit_door = 0;
+	r[0].hit_sprite = 0;
+	r[1].hit_sprite = 0;
 }
 
 void	door_detetction(t_mlx *mlx, t_inter *r, t_ray *ray, int i)
 {
+	t_inter t;
+	
 	mlx->_d[i].door_exist = 0;
-	r[0] = rmin(r[0], r[1]);
-	mlx->_d[i].door_dist = r[0].door_dest * cos(mlx->_p.player_angle
+	t = rmin(r[0], r[1]);
+	mlx->_d[i].door_dist = t.door_dest * cos(mlx->_p.player_angle
 			- ray->ray_angle);
-	mlx->_d[i].door_color = r[0].doorcolor;
+	mlx->_d[i].door_color = t.doorcolor;
 	if (mlx->_d[i].door_dist < ray->dist)
 		mlx->_d[i].door_exist = 1;
 }
@@ -56,6 +60,8 @@ float	horizontal_hit(t_mlx *mlx, t_ray *ray, t_inter *r)
 	hit_distance = get_distance(mlx, r, ray, HORIZONTAL);
 	if (!r->hit_door)
 		r->door_dest = hit_distance;
+	if(!r->hit_sprite)
+		r->sprite_dist = hit_distance;
 	return (hit_distance);
 }
 
@@ -83,6 +89,8 @@ float	vertical_hit(t_mlx *mlx, t_ray *ray, t_inter *r)
 	hit_distance = get_distance(mlx, r, ray, VERTICAL);
 	if (!r->hit_door)
 		r->door_dest = hit_distance;
+	if (!r->hit_sprite)
+		r->sprite_dist = hit_distance;
 	return (hit_distance);
 }
 
@@ -111,5 +119,6 @@ float	cast(t_ray *ray, t_mlx *mlx, int i)
 	}
 	ray->dist *= cos(mlx->_p.player_angle - ray->ray_angle);
 	door_detetction(mlx, r, ray, i);
+	sprite_detection(mlx, r, ray, i);
 	return (ray->dist);
 }

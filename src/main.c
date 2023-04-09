@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 04:39:16 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 00:20:45 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ t_inter	rmin(t_inter r1, t_inter r2)
 		return (r1);
 	return (r2);
 }
+t_inter	smin(t_inter r1, t_inter r2)
+{
+	if (r1.sprite_dist < r2.sprite_dist)
+		return (r1);
+	return (r2);
+}
 
 int	main(int argc, char **argv)
 {
@@ -39,6 +45,7 @@ int	main(int argc, char **argv)
 		return (0);
 	set_player_cords(&comp);
 	mlx.p_mlx = mlx_init();
+	mlx.ident = 0;
 	init_data(&mlx, &comp);
 	pthread_create(&mlx.thread, NULL, &framer, &mlx);
 	pthread_create(&gun_thread, NULL, &gun_framer, &mlx);

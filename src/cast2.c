@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 04:41:16 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 04:44:24 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/08 18:23:07 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	hit_wall(t_mlx *mlx, float x, float y, t_inter *r)
 			my_mlx_pixel_put(mlx, x, y, 0x0000FF00);
 		}
 	}
+	if (mlx->_m.map[(int)y][(int)x] == 'F')
+		check_sprite(mlx, r, x, y);
 	if (mlx->_m.map[(int)y][(int)x] == '1')
 		return (1);
 	return (0);
