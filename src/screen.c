@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 00:22:48 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 03:23:49 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	putWalls(t_mlx *mlx)
 	int		y;
 	int		i;
 	int 	offset;
-	int 	s_id = 0;
+	int 	s_id = -1;
 	t_mlx	tmp;
 
 	x = 0;
@@ -169,7 +169,25 @@ void	putWalls(t_mlx *mlx)
 			if (mlx->_sp[x].sp_id != s_id)
 			{
 				s_id = mlx->_sp[x].sp_id;
-				j = 0;
+				 int rst = 0;
+				int r = 0;
+				 rst = x;
+				 while(rst < SCREEN_WIDTH)
+				 {
+					if (!mlx->_sp[rst].sprite_exist)
+						break;
+					if (mlx->_sp[rst].sp_id != s_id)
+					{
+						r = -1;
+						break;
+					}
+					r++;
+					rst++;
+				}
+				j = mlx->sp_img.width - (r * mlx->sp_img.width / sprite_height);
+				j = (j * sprite_height / mlx->sp_img.width);
+				if (r < 0 || rst >= SCREEN_WIDTH)
+					j = 0;
 			}
 			while (i < sprite_height && y + i < SCREEN_HEIGHT)
 			{
@@ -190,7 +208,10 @@ void	putWalls(t_mlx *mlx)
 				my_mlx_pixel_put(&tmp, x, y + i, TRANSPARENT);
 				i++;
 			}
-			j++;
+			if (x_ratio >= mlx->sp_img.width)
+				j = 0;
+			else
+				j++;
 		}
 		if (!mlx->_sp[x].sprite_exist && !mlx->_d[x].door_exist)
 		{

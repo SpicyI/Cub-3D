@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 00:20:27 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 01:04:51 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ typedef struct s_sprite
 	int 	sprite_color;
 	int 	sp_id;
 	int 	sp_hitpt[2];
+	int 	start;
 }				t_sprite;
 
 typedef struct s_inter
@@ -136,6 +137,8 @@ typedef struct s_inter
 	float sprite_dist;
 	int  doorcolor;
 	int sp_hitpt[2];
+	float sp_hitptf[2];
+	int hit_side;
 }		t_inter;
 
 typedef struct s_mouse
