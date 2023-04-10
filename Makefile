@@ -2,7 +2,7 @@ CC = cc
 CFLAGS =  -Wall -Werror -Wextra #-fsanitize=address -g3
 MLX_FLAGS= -lmlx -framework OpenGL -framework AppKit -pthread 
 
-NAME = Cub3D
+NAME = cub3D
 EXT = .c
 SRCDIR = ./SRC
 MLXLIB = mlx/libmlx.a
@@ -18,7 +18,8 @@ DELOBJ = $(OBJ)
 all: $(NAME)
 
 
-$(NAME): $(OBJ) 
+$(NAME): $(OBJ)
+	make -C mlx
 	$(CC) $(OBJ) -o $(NAME) $(MLXLIB) $(CFLAGS) $(MLX_FLAGS) -I mlx/mlx.h
 
 $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT) 
@@ -29,7 +30,8 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 clean: 
 	$(RM) $(DELOBJ) $(OBJDIR)
 .PHONY: fclean
-fclean: clean 
+fclean: clean
+	make clean -C mlx
 	$(RM) $(NAME)
 .PHONY: re
 re: fclean all
