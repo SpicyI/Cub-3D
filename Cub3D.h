@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 04:24:30 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 20:57:26 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,6 +257,8 @@ typedef struct s_mlx
 	int			ident;
 	void		*sp_imgptr;
 	void		*dr_imgptr;
+	t_data		glitch;
+	t_data		*sp_ptr;
 }				t_mlx;
 
 typedef struct s_scene

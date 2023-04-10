@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 21:24:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/07 21:42:47 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 20:54:26 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ void	*framer(void *p)
 		mlx->load_screen_img = mlx->load_screen[frame].img;
 		usleep(100000);
 		frame++;
+	}
+	while (TRUE)
+	{
+		mlx->sp_ptr[0] = mlx->sp_img;
+		usleep(500000);
+		mlx->sp_ptr[0] = mlx->glitch;
+		usleep(300000);
 	}
 	return (NULL);
 }

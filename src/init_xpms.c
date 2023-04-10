@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:20:38 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 04:43:28 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 20:34:42 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,11 @@ void	init_loadscreen(t_mlx *mlx)
 
 void	init_sprite(t_mlx *mlx)
 {
+	mlx->glitch.img = mlx_xpm_file_to_image(mlx->p_mlx,
+			"testxpm/glitched.xpm", &mlx->glitch.width, &mlx->glitch.height);
 	mlx->sp_img.img = mlx_xpm_file_to_image(mlx->p_mlx,
-			"testxpm/bermil.xpm", &mlx->sp_img.width, &mlx->sp_img.height);
-	if (mlx->sp_img.img == NULL)
+			"testxpm/holo.xpm", &mlx->sp_img.width, &mlx->sp_img.height);
+	if (mlx->sp_img.img == NULL || mlx->glitch.img == NULL)
 	{
 		printf("Error reading sprite file \n");
 		exit(0);
@@ -75,6 +77,9 @@ void	init_sprite(t_mlx *mlx)
 	mlx->sp_img.addr = mlx_get_data_addr(mlx->sp_img.img,
 			&mlx->sp_img.bits_per_pixel, &mlx->sp_img.line_length,
 			&mlx->sp_img.endian);
+	mlx->glitch.addr = mlx_get_data_addr(mlx->glitch.img,
+			&mlx->glitch.bits_per_pixel, &mlx->glitch.line_length,
+			&mlx->glitch.endian);
 }
 
 void	init_texture(t_mlx *mlx, t_components *comp)

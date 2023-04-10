@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 23:57:50 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 01:45:38 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 20:51:31 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	draw_sprite(int sprite_height, t_mlx *mlx, t_scene *s, int i)
 		}
 		s->x_ratio = s->sprite_start * mlx->sp_img.width / sprite_height;
 		s->y_ratio = i * mlx->sp_img.height / sprite_height;
-		s->color = get_img_color(&(mlx->sp_img), s->x_ratio, s->y_ratio);
+		s->color = get_img_color(mlx->sp_ptr, s->x_ratio, s->y_ratio);
 		my_mlx_pixel_put(&s->tmp, s->x, s->y + i, s->color);
 		i++;
 	}

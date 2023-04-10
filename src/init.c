@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:21:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 03:58:34 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 20:45:16 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	init_player_img(t_mlx *mlx)
 
 	mlx->_p.icon_img = mlx_xpm_file_to_image(mlx->p_mlx, "./testxpm/player.xpm",
 			&i, &j);
+	mlx->sp_ptr = calloc(1, sizeof(t_data));
 	if (mlx->_p.icon_img == NULL)
 	{
 		printf("Error reading player icon \n");
