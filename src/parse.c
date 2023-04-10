@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 16:27:23 by ebelkhei          #+#    #+#             */
-/*   Updated: 2023/04/10 03:51:11 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 21:42:37 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,26 +66,26 @@ int	check(char **el, t_elements *elements)
 {
 	if ((arr_size(el) != 2))
 		return (!printf("Invalid element \n"));
-	if (!ft_strcmp(el[0], "NO"))
+	if (!ft_strcmp(el[0], "NO") && !elements->n_texture)
 		elements->n_texture = ft_strdup(el[1]);
-	else if (!ft_strcmp(el[0], "SO"))
+	else if (!ft_strcmp(el[0], "SO") && !elements->s_texture)
 		elements->s_texture = ft_strdup(el[1]);
-	else if (!ft_strcmp(el[0], "WE"))
+	else if (!ft_strcmp(el[0], "WE") && !elements->w_texture)
 		elements->w_texture = ft_strdup(el[1]);
-	else if (!ft_strcmp(el[0], "EA"))
+	else if (!ft_strcmp(el[0], "EA") && !elements->e_texture)
 		elements->e_texture = ft_strdup(el[1]);
-	else if (!ft_strcmp(el[0], "F"))
+	else if (!ft_strcmp(el[0], "F") && !elements->f)
 	{
 		if (!parse_rgb(elements, el[1], 0))
 			return (!printf("Invalid colors\n"));
 	}
-	else if (!ft_strcmp(el[0], "C"))
+	else if (!ft_strcmp(el[0], "C") && !elements->c)
 	{
 		if (!parse_rgb(elements, el[1], 1))
 			return (!printf("Invalid colors\n"));
 	}
 	else
-		return (!printf("Invalid element identifier\n"));
+		return (!printf("Invalid element\n"));
 	return (1);
 }
 

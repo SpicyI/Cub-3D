@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 20:47:07 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 21:41:00 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int argc, char **argv)
 		return (printf(YEL "Usage: ./cub3d map.cub \n" RESET));
 	initialize_comps(&comp);
 	if (!read_file(argv[1], &comp) || !check_comps(&comp))
-		return (0);
+		return (printf("Invalid file\n"));
 	set_player_cords(&comp);
 	mlx.p_mlx = mlx_init();
 	mlx.ident = 0;
