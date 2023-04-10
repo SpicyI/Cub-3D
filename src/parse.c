@@ -6,79 +6,21 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 16:27:23 by ebelkhei          #+#    #+#             */
-/*   Updated: 2023/04/07 04:18:21 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:56:21 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Cub3D.h"
 
-int	create_trgb(unsigned char t, unsigned char r, unsigned char g, unsigned char b)
-{
-	return (*(int *)(unsigned char [4]){b, g, r, t});
-}
-
-void	set_player_cords(t_components *comp)
-{
-	int        i;
-    int        j;
-
-    i = 0;
-    while (comp->map[i])
-    {
-        j = 0;
-        while (comp->map[i][j])
-        {
-            if (comp->map[i][j] == 32)
-				comp->map[i][j] = 'x';
-			if (comp->map[i][j] == 'N' || comp->map[i][j] == 'W'
-				|| comp->map[i][j] == 'E' || comp->map[i][j] == 'S')
-            {
-				comp->player_x = j;
-				comp->player_y = i;
-				return ;
-			}
-            j++;
-        }
-        i++;
-    }
-}
-
-int	num_of_commas(char *str)
+int	*parse_rgb_2(char **colors)
 {
 	int	i;
-	int	j;
+	int	n;
+	int	*rgb;
 
 	i = -1;
-	j = 0;
-	while (str[++i])
-	{
-		if (str[i] == ',')
-			j++;
-		if (str[i] != ',' && str[i] != '\n' && !ft_isdigit(str[i]))
-			exit(printf("Invalid color\n"));
-	}
-	return (j);
-}
-
-int	arr_size(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-		i++;
-	return (i);
-}
-
-int *parse_rgb_2(char **colors)
-{
-	int				i;
-	int				n;
-	int				*rgb;
-
-	i = 0;
-	rgb = malloc(3 * sizeof(int));
-	while (++i != 3 && colors[i])
+	rgb = malloc(3 * sizeof(unsigned char));
+	while (colors[++i])
 	{
 		n = ft_atoi(colors[i]);
 		if (n >= 0 && n <= 255)
@@ -139,25 +81,6 @@ int	check(char **el, t_elements *elements)
 	else
 		return (!printf("Invalid element identifier\n"));
 	return (1);
-}
-
-int	is_dir(t_elements *elements)
-{
-	int	*fds;
-	int	i;
-
-	fds = malloc(4 * sizeof(int));
-	fds[0] = open(elements->e_texture, O_DIRECTORY);
-	fds[1] = open(elements->n_texture, O_DIRECTORY);
-	fds[2] = open(elements->s_texture, O_DIRECTORY);
-	fds[3] = open(elements->w_texture, O_DIRECTORY);
-	i = 4;
-	while (--i >= 0)
-	{
-		if (fds[i] != -1)
-			return (free(fds), 1);
-	}
-	return (free(fds), 0);
 }
 
 int	check_element(char *element, t_elements *elements)

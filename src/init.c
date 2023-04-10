@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:21:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 04:23:37 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:35:53 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	init_map(t_mlx *mlx, t_components *comp)
 	mlx->_m.display_map = 1;
 	mlx->_m.img_xpos = 100 - mlx->_p.player_x;
 	mlx->_m.img_ypos = 100 - mlx->_p.player_y;
+	mlx->_m.c_color = comp->elements.c_color;
+	mlx->_m.f_color = comp->elements.f_color;
 }
 
 void	init_player_img(t_mlx *mlx)

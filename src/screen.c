@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 23:57:20 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:40:54 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	draw_scene(t_mlx *mlx)
 	while (s.x < SCREEN_WIDTH)
 	{
 		i = draw_wall(mlx, i, offset, &s);
-		draw_ceiling(&s, i);
+		draw_ceiling(&s, i, mlx);
 		draw_floor(&s);
 		s.x++;
 	}
@@ -87,8 +87,8 @@ void	render_scene(t_mlx *mlx)
 	draw_scene(mlx);
 	pthread_join(threads[0], NULL);
 	pthread_join(threads[1], NULL);
-	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->sp_imgptr, 0, 0);
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->dr_imgptr, 0, 0);
+	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->sp_imgptr, 0, 0);
 	mlx_destroy_image(mlx->p_mlx, mlx->dr_imgptr);
 	mlx_destroy_image(mlx->p_mlx, mlx->sp_imgptr);
 }

@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 04:34:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 04:46:02 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:55:01 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	draw_wall(t_mlx *mlx, int i, int offset, t_scene *s)
 	return (i);
 }
 
-void	draw_ceiling(t_scene *s, int i)
+void	draw_ceiling(t_scene *s, int i, t_mlx *mlx)
 {
 	while (s->y + i < SCREEN_HEIGHT)
 	{
@@ -47,7 +47,7 @@ void	draw_ceiling(t_scene *s, int i)
 			i++;
 			continue ;
 		}
-		my_mlx_pixel_put(&s->tmp, s->x, s->y + i, shader(GROUNDCOLOR, (i) * 100
+		my_mlx_pixel_put(&s->tmp, s->x, s->y + i, shader(mlx->_m.f_color, (i) * 100
 				/ (SCREEN_HEIGHT / 2)));
 		i++;
 	}

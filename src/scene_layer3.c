@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 23:57:50 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 00:40:02 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 01:45:38 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ void	set_sprite(int *sprite_height, t_mlx *mlx, t_scene *s)
 	int	r;
 
 	r = 0;
-	*sprite_height = (mlx->_m.map_scale / mlx->_sp[s->x].sprite_dist)
-		* mlx->sreen_dist;
 	rst = s->x;
 	s->s_id = mlx->_sp[s->x].sp_id;
 	while (rst < SCREEN_WIDTH)
@@ -64,6 +62,8 @@ void	put_sprite(t_scene *s, t_mlx *mlx)
 	int	i;
 
 	i = 0;
+	s->height = (mlx->_m.map_scale / mlx->_sp[s->x].sprite_dist)
+		* mlx->sreen_dist;
 	s->y = s->offset - (s->height / 2);
 	if (s->y + i < 0)
 		i = 0 - s->y;
@@ -94,7 +94,10 @@ void	draw_sprites(t_mlx *mlx)
 		if (mlx->_sp[s.x].sprite_exist)
 			put_sprite(&s, mlx);
 		else
+		{
 			transparence_line(0, SCREEN_HEIGHT, &s.tmp, s.x);
+			s.sprite_start = 0;
+		}
 		s.x++;
 	}
 	mlx->sp_imgptr = s.tmp.img;
