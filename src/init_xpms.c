@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:20:38 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 00:38:49 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 04:43:28 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ void	init_gun(t_mlx *mlx)
 	char	*path;
 
 	frame_id = 0;
+	mlx->crosshair.img = mlx_xpm_file_to_image(mlx->p_mlx,
+			"gunxpm/crosshair.xpm", &mlx->crosshair.width,
+			&mlx->crosshair.height);
 	while (frame_id < 7)
 	{
 		path = ft_strjoin(ft_strdup("gunxpm/"), ft_itoa(frame_id + 1));
@@ -25,7 +28,7 @@ void	init_gun(t_mlx *mlx)
 		mlx->gun_frames[frame_id].img = mlx_xpm_file_to_image(mlx->p_mlx, path,
 				&mlx->gun_frames[frame_id].width,
 				&mlx->gun_frames[frame_id].height);
-		if (mlx->gun_frames[frame_id].img == NULL)
+		if (!mlx->gun_frames[frame_id].img || !mlx->crosshair.img)
 		{
 			printf("Error reading gun frames \n");
 			exit(0);
@@ -63,7 +66,7 @@ void	init_loadscreen(t_mlx *mlx)
 void	init_sprite(t_mlx *mlx)
 {
 	mlx->sp_img.img = mlx_xpm_file_to_image(mlx->p_mlx,
-			"testxpm/holo.xpm", &mlx->sp_img.width, &mlx->sp_img.height);
+			"testxpm/bermil.xpm", &mlx->sp_img.width, &mlx->sp_img.height);
 	if (mlx->sp_img.img == NULL)
 	{
 		printf("Error reading sprite file \n");

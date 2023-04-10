@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 04:34:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 02:55:01 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 03:56:40 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ void	draw_ceiling(t_scene *s, int i, t_mlx *mlx)
 			i++;
 			continue ;
 		}
-		my_mlx_pixel_put(&s->tmp, s->x, s->y + i, shader(mlx->_m.f_color, (i) * 100
-				/ (SCREEN_HEIGHT / 2)));
+		my_mlx_pixel_put(&s->tmp, s->x, s->y + i, shader(mlx->_m.f_color, i
+				* 100 / (SCREEN_HEIGHT / 2)));
 		i++;
 	}
 }

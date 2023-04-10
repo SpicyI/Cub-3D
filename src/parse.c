@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 16:27:23 by ebelkhei          #+#    #+#             */
-/*   Updated: 2023/04/10 02:56:21 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 03:51:11 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,15 @@ int	parse_rgb(t_elements *elements, char *color, int a)
 	if (!rgb)
 		return (0);
 	if (a)
+	{
 		elements->c_color = create_trgb(0, rgb[0], rgb[1], rgb[2]);
+		elements->c = 1;
+	}
 	else
+	{
 		elements->f_color = create_trgb(0, rgb[0], rgb[1], rgb[2]);
+		elements->f = 1;
+	}
 	free(rgb);
 	ft_free_all_mfs(colors);
 	return (1);

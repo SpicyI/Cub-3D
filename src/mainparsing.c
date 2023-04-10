@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 22:10:29 by ebelkhei          #+#    #+#             */
-/*   Updated: 2023/04/10 02:49:42 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 03:52:22 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void	initialize_comps(t_components *comp)
 {
 	comp->map = NULL;
+	comp->elements.c = 0;
+	comp->elements.f = 0;
 	comp->player_x = 0;
 	comp->map_h = 0;
 	comp->map_w = 0;
@@ -31,7 +33,7 @@ int	check_comps(t_components *comp)
 {
 	if (!(comp->elements.n_texture && comp->elements.s_texture
 			&& comp->elements.w_texture && comp->elements.e_texture
-			&& comp->map))
+			&& comp->map && comp->elements.c && comp->elements.f))
 		return (!printf("Missing Element\n"));
 	return (1);
 }

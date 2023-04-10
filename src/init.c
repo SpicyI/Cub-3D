@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:21:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 02:35:53 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 03:58:34 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void	init_player(t_mlx *mlx, t_components *comp)
 {
 	mlx->_p.player_x = comp->player_x * mlx->_m.map_scale;
 	mlx->_p.player_y = comp->player_y * mlx->_m.map_scale;
+	mlx->_p.player_x += mlx->_m.map_scale / 2;
+	mlx->_p.player_y += mlx->_m.map_scale / 2;
 	if (mlx->_m.map[comp->player_y][comp->player_x] == 'N')
 		mlx->_p.player_angle = 3 * M_PI / 2;
 	else if (mlx->_m.map[comp->player_y][comp->player_x] == 'S')

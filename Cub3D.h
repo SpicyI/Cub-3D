@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 02:40:26 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 04:24:30 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,8 @@ typedef struct t_elements
 	char		*w_texture;
 	char		*e_texture;
 	int			f_color;
+	int			f;
+	int			c;
 	int			c_color;
 }				t_elements;
 
@@ -204,8 +206,8 @@ typedef struct s_map
 	int			display_map;
 	int			img_ypos;
 	int			img_xpos;
-	int 	   c_color;
-	int 	   f_color;
+	int			c_color;
+	int			f_color;
 }				t_map;
 
 //player data
@@ -246,13 +248,13 @@ typedef struct s_mlx
 	t_data		gun_frames[7];
 	void		*load_screen_img;
 	void		*gun_img;
+	t_data		crosshair;
 	int			shoot;
 	pthread_t	thread;
 	t_mouse		_mo;
 	t_door		*_d;
 	t_data		sp_img;
 	int			ident;
-
 	void		*sp_imgptr;
 	void		*dr_imgptr;
 }				t_mlx;

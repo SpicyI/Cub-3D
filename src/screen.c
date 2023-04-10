@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 04:50:54 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/10 02:40:54 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 04:28:37 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,7 @@ void	render_scene(t_mlx *mlx)
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->sp_imgptr, 0, 0);
 	mlx_destroy_image(mlx->p_mlx, mlx->dr_imgptr);
 	mlx_destroy_image(mlx->p_mlx, mlx->sp_imgptr);
+	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->crosshair.img,
+		(SCREEN_WIDTH / 2) - mlx->crosshair.width / 2, (SCREEN_HEIGHT / 2)
+		- mlx->crosshair.height / 2);
 }
