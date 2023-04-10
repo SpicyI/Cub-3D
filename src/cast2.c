@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 04:41:16 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 18:23:07 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 00:37:30 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,9 @@ float	get_distance(t_mlx *mlx, t_inter *r, t_ray *ray, int side)
 	r->hit_y = r->y_inter;
 	hit_distance = sqrt(pow(mlx->_p.player_x - r->x_inter, 2)
 			+ pow(mlx->_p.player_y - r->y_inter, 2));
+	if (!r->hit_door)
+		r->door_dest = hit_distance;
+	if (!r->hit_sprite)
+		r->sprite_dist = hit_distance;
 	return (hit_distance);
 }

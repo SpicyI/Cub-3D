@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:21:26 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 00:26:16 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 21:46:29 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	mouse_controls(int x, int y, t_mlx *mlx)
 	{
 		mlx->_mo.y_offset = ((y - (SCREEN_HEIGHT / 2)) * -1);
 		mouse_step = x - mlx->_mo.mouse_x;
-		mlx->_mo.mouse_angle = atan(abs(mouse_step) / mlx->sreen_dist);
+		mlx->_mo.mouse_angle = atan(abs(mouse_step / 2) / mlx->sreen_dist);
 		if (mouse_step < 0)
 			mlx->mouse = -1;
 		else if (mouse_step >= 0)

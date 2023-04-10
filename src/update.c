@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 01:28:22 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 01:31:59 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 00:01:33 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,12 @@ void	update(t_mlx *mlx)
 	arrows(mlx, step_x, step_y);
 	key_stroke(mlx, step_x, step_y);
 	update_minimap(mlx);
+	mlx_clear_window(mlx->p_mlx, mlx->win);
+	draw_map(mlx);
+	mlx->img = mlx_new_image(mlx->p_mlx, mlx->_m.map_width * mlx->_m.map_scale,
+			mlx->_m.map_height * mlx->_m.map_scale);
+	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bits_per_pixel,
+			&mlx->line_length, &mlx->endian);
+	transparent_bg(mlx, mlx->_m.map_width * mlx->_m.map_scale,
+		mlx->_m.map_height * mlx->_m.map_scale);
 }

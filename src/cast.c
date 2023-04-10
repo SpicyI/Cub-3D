@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 04:39:44 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 18:21:41 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 03:37:45 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	init_inter(t_inter *r)
 
 void	door_detetction(t_mlx *mlx, t_inter *r, t_ray *ray, int i)
 {
-	t_inter t;
-	
+	t_inter	t;
+
 	mlx->_d[i].door_exist = 0;
 	t = rmin(r[0], r[1]);
 	mlx->_d[i].door_dist = t.door_dest * cos(mlx->_p.player_angle
@@ -58,10 +58,6 @@ float	horizontal_hit(t_mlx *mlx, t_ray *ray, t_inter *r)
 	if (isnan(r->x_inter))
 		r->x_inter = 0;
 	hit_distance = get_distance(mlx, r, ray, HORIZONTAL);
-	if (!r->hit_door)
-		r->door_dest = hit_distance;
-	if(!r->hit_sprite)
-		r->sprite_dist = hit_distance;
 	return (hit_distance);
 }
 

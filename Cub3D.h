@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:59:39 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 01:04:51 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 00:37:57 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,27 @@ typedef struct s_mlx
 	t_door			*_d;
 	t_data			sp_img;
 	int 			ident;
+
+	/*************/
+	void 			*sp_imgptr;
+	void 			*dr_imgptr;
 }					t_mlx;
+
+
+typedef struct s_scene
+{
+	t_mlx			tmp;
+	int		x;
+	int		y;
+	int 	offset;
+	int 	s_id;
+	int		color;
+	int		x_ratio;
+	int		y_ratio;
+	int 	sprite_start;
+
+	int		height;
+}					t_scene;
 
 /*           parcing        */
 char		*get_next_line(int fd);
@@ -299,7 +319,7 @@ void				put_player(t_mlx *mlx);
 void				ray_caster(t_mlx *mlx);
 
 /*             3d rendring*/
-void				putWalls(t_mlx *mlx);
+void				render_scene(t_mlx *mlx);
 int					shader(int color, int shad_percentage);
 int					key_released(int key, t_mlx *mlx);
 
@@ -311,6 +331,7 @@ void	init_gun(t_mlx *mlx);
 void	init_data(t_mlx *mlx, t_components *comp);
 void init_loadscreen(t_mlx *mlx);
 void init_texture(t_mlx *mlx, t_components *comp);
+void	init_sprite(t_mlx *mlx);
 
 /*				animation			*/
 void	*framer(void *p);
@@ -345,6 +366,13 @@ void check_sprite(t_mlx *mlx, t_inter *r, float x, float y);
 void sprite_detection(t_mlx *mlx, t_inter *r, t_ray *ray, int i);
 t_inter	smin(t_inter r1, t_inter r2);
 
+/*				scene layers   */
+int	draw_wall(t_mlx *mlx, int i, int offset, t_scene *s);
+void	draw_ceiling(t_scene *s, int  i);
+void	draw_floor(t_scene *s);
+void	draw_door(t_scene *s, t_mlx *mlx, int offset);
+void transparence_line(int start, int end, t_mlx *m, int x);
+void draw_sprites(t_mlx *mlx);
 /*                tools   */
 t_inter	rmin(t_inter r1, t_inter r2);
 int					min(int a, int b);

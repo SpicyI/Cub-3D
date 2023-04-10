@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 00:21:11 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/08 06:11:56 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 04:23:37 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	init_player(t_mlx *mlx, t_components *comp)
 	mlx->_p.pmovment_speed = 4;
 	mlx->_p.rotation_speed = 6 * (M_PI / 180);
 	init_player_img(mlx);
+	init_sprite(mlx);
 }
 
 void	init_data(t_mlx *mlx, t_components *comp)

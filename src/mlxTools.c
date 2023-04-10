@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:35 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 01:18:53 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/10 00:14:51 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	get_img_color(t_data *data, int x, int y)
 {
 	char	*dst;
 
-	if (x < 0 || x >= data->width || y < 0 || y >= data->height)
+	if (x <= 0 || x >= data->width || y <= 0 || y >= data->height)
 		return (TRANSPARENT);
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	return (*(unsigned int *)dst);
@@ -55,17 +55,9 @@ int	render(t_mlx *mlx)
 		return (mlx_put_image_to_window(mlx->p_mlx, mlx->win,
 				mlx->load_screen_img, 0, 0));
 	update(mlx);
-	mlx_clear_window(mlx->p_mlx, mlx->win);
-	draw_map(mlx);
-	mlx->img = mlx_new_image(mlx->p_mlx, mlx->_m.map_width * mlx->_m.map_scale,
-			mlx->_m.map_height * mlx->_m.map_scale);
-	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bits_per_pixel,
-			&mlx->line_length, &mlx->endian);
-	transparent_bg(mlx, mlx->_m.map_width * mlx->_m.map_scale,
-		mlx->_m.map_height * mlx->_m.map_scale);
 	ray_caster(mlx);
 	mlx->_p.player_img = mlx->img;
-	putWalls(mlx);
+	render_scene(mlx);
 	mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->_m.map_img,
 		mlx->_m.img_xpos, mlx->_m.img_ypos);
 	mlx_destroy_image(mlx->p_mlx, mlx->_m.map_img);
@@ -73,7 +65,8 @@ int	render(t_mlx *mlx)
 		mlx->_m.img_xpos, mlx->_m.img_ypos);
 	if (mlx->_m.display_map > 0)
 		mlx_put_image_to_window(mlx->p_mlx, mlx->win, mlx->gun_img, SCREEN_WIDTH
-			- mlx->gun_frames->width, SCREEN_HEIGHT - mlx->gun_frames->height + 4);
+			- mlx->gun_frames->width,
+			SCREEN_HEIGHT - mlx->gun_frames->height + 4);
 	put_player(mlx);
 	mlx_destroy_image(mlx->p_mlx, mlx->_p.player_img);
 	reset(mlx);

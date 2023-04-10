@@ -6,7 +6,7 @@
 /*   By: del-khay <del-khay@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 23:00:10 by del-khay          #+#    #+#             */
-/*   Updated: 2023/04/09 01:08:59 by del-khay         ###   ########.fr       */
+/*   Updated: 2023/04/09 03:34:22 by del-khay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_inter	rmin(t_inter r1, t_inter r2)
 		return (r1);
 	return (r2);
 }
+
 t_inter	smin(t_inter r1, t_inter r2)
 {
 	if (r1.sprite_dist < r2.sprite_dist)
